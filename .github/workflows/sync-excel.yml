@@ -1,0 +1,28 @@
+name: Sync Excel files
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Descargar Gastos
+        run: |
+          curl -L "https://mediaaereanet-my.sharepoint.com/:x:/g/personal/carlos_robles_mediaaerea_mx/IQC1UmLMN2TYTLgX8LmZ90ljAXperl0wh1P9r6O2U6FV3YU?e=NpmRk8&download=1" -o gastos.xlsx
+
+      - name: Descargar Ingresos
+        run: |
+          curl -L "https://mediaaereanet-my.sharepoint.com/:x:/g/personal/carlos_robles_mediaaerea_mx/IQBSTkMOZXxtRJJuoWJkCKCgASyr884JtE7_QLoiRa0y8ww?e=R2ZjUX&download=1" -o ingresos.xlsx
+
+      - name: Commit y push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add gastos.xlsx ingresos.xlsx
+          git diff --staged --quiet || git commit -m "sync excel"
+          git push

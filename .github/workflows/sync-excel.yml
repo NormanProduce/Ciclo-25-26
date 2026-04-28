@@ -16,11 +16,11 @@ jobs:
 
       - name: Descargar Gastos
         run: |
-          curl -L "https://mediaaereanet-my.sharepoint.com/:x:/g/personal/carlos_robles_mediaaerea_mx/IQC1UmLMN2TYTLgX8LmZ90ljAXperl0wh1P9r6O2U6FV3YU?e=NpmRk8&download=1" -o gastos.xlsx
+          curl -L "https://docs.google.com/spreadsheets/d/1cf27V6bg69F3-M_U_ZbBkq_6fMUvIvvR/export?format=xlsx" -o gastos.xlsx
 
       - name: Descargar Ingresos
         run: |
-          curl -L "https://mediaaereanet-my.sharepoint.com/:x:/g/personal/carlos_robles_mediaaerea_mx/IQBSTkMOZXxtRJJuoWJkCKCgASyr884JtE7_QLoiRa0y8ww?e=R2ZjUX&download=1" -o ingresos.xlsx
+          curl -L "https://docs.google.com/spreadsheets/d/1qqEFvke4MLLLpA_KEPCYCr1uiU-CSf8m/export?format=xlsx" -o ingresos.xlsx
 
       - name: Commit y push
         run: |

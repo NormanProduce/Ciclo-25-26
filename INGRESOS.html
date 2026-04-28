@@ -724,7 +724,7 @@
 // ══════════════════════════════════════════════════════
 // CONFIGURACIÓN — Cambia solo esta URL si renombras el archivo
 // ══════════════════════════════════════════════════════
-const EXCEL_URL = 'https://mediaaereanet-my.sharepoint.com/:x:/g/personal/carlos_robles_mediaaerea_mx/IQBSTkMOZXxtRJJuoWJkCKCgASyr884JtE7_QLoiRa0y8ww?e=R2ZjUX&download=1';
+const EXCEL_URL = 'https://raw.githubusercontent.com/normanproduce/Ciclo-25-26/main/ingresos.xlsx';
 
 // Instancias de gráficas (para destruir antes de recrear)
 let chartIngresosInst = null;
@@ -788,7 +788,7 @@ async function cargarDesdeGitHub() {
     document.getElementById('errorBanner').classList.remove('show');
 
     // Cache-bust para que GitHub no sirva versión cacheada
-    const url = EXCEL_URL + '&t=' + Date.now();
+    const url = EXCEL_URL + '?t=' + Date.now();
 
     try {
         const resp = await fetch(url);

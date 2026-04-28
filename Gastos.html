@@ -596,7 +596,7 @@
 // ══════════════════════════════════════════════════════
 // CONFIGURACIÓN
 // ══════════════════════════════════════════════════════
-const EXCEL_URL = 'https://mediaaereanet-my.sharepoint.com/:x:/g/personal/carlos_robles_mediaaerea_mx/IQC1UmLMN2TYTLgX8LmZ90ljAXperl0wh1P9r6O2U6FV3YU?e=NpmRk8&download=1';
+const EXCEL_URL = 'https://raw.githubusercontent.com/normanproduce/Ciclo-25-26/main/gastos.xlsx';
 
 // ══════════════════════════════════════════════════════
 // DATOS
@@ -638,7 +638,7 @@ async function cargarDesdeGitHub() {
     document.getElementById('loadingOverlay').classList.remove('hidden');
     document.getElementById('errorBanner').classList.remove('show');
 
-    const url = EXCEL_URL + '&t=' + Date.now();
+    const url = EXCEL_URL + '?t=' + Date.now();
     try {
         const resp = await fetch(url);
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);

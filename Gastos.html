@@ -121,10 +121,14 @@
             border: 1px solid #fca5a5;
             border-left: 5px solid #ef4444;
             color: #7f1d1d;
-            padding: 12px 40px;
+            padding: 14px 40px;
             font-size: 0.88em;
         }
         #errorBanner.show { display: block; }
+        #errorBanner .err-title { font-weight: 700; }
+        #errorBanner .err-detail { display: block; margin-top: 4px; font-family: monospace; font-size: 0.85em; opacity: 0.85; word-break: break-all; }
+        #errorBanner .err-close { float: right; cursor: pointer; font-weight: 700; font-size: 1.1em; margin-left: 12px; opacity: 0.6; }
+        #errorBanner .err-close:hover { opacity: 1; }
 
         /* HEADER */
         header {
@@ -300,14 +304,14 @@
 <div id="loadingOverlay">
     <div class="loading-spinner"></div>
     <div class="loading-text">Cargando datos desde Excel...</div>
-    <div class="loading-sub">Leyendo Reporte_Papa_Graficos.xlsx desde GitHub</div>
+    <div class="loading-sub">Leyendo gastos.xlsx desde GitHub</div>
 </div>
 
 <!-- SYNC BAR -->
 <div class="sync-bar">
     <div class="sync-bar-left">
         <i class="fas fa-sync-alt"></i>
-        <span>Datos en tiempo real desde <strong>Reporte_Papa_Graficos.xlsx</strong> en GitHub</span>
+        <span>Datos en tiempo real desde <strong>gastos.xlsx</strong> en GitHub</span>
         <span id="syncStatus"></span>
     </div>
     <div class="sync-bar-right">
@@ -323,10 +327,10 @@
 
 <!-- ERROR BANNER -->
 <div id="errorBanner">
+    <span class="err-close" onclick="this.parentElement.classList.remove('show')">✕</span>
     <i class="fas fa-exclamation-triangle"></i>
-    <strong> No se pudo cargar el Excel desde GitHub.</strong>
-    Se muestran los últimos datos guardados.
-    <span id="errorDetail"></span>
+    <span class="err-title" id="errorTitle"> Error al cargar datos</span>
+    <span class="err-detail" id="errorDetail"></span>
 </div>
 
 <!-- HEADER -->
@@ -631,6 +635,13 @@ function setEl(id, val) { const e = document.getElementById(id); if (e) e.textCo
 // ══════════════════════════════════════════════════════
 // CARGA AUTOMÁTICA DESDE GITHUB
 // ══════════════════════════════════════════════════════
+function showError(title, detail) {
+    setEl('errorTitle', ' ' + title);
+    setEl('errorDetail', detail || '');
+    document.getElementById('errorBanner').classList.add('show');
+    console.error('[Gastos]', title, detail);
+}
+
 async function cargarDesdeGitHub() {
     const btn = document.getElementById('btnRefresh');
     btn.disabled = true;
@@ -641,17 +652,20 @@ async function cargarDesdeGitHub() {
     const url = EXCEL_URL + '?t=' + Date.now();
     try {
         const resp = await fetch(url);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status} — URL: ${EXCEL_URL}`);
         const buffer = await resp.arrayBuffer();
+        // Verificar que es un archivo Excel válido (PK header)
+        const header = new Uint8Array(buffer.slice(0, 4));
+        if (header[0] !== 0x50 || header[1] !== 0x4B) {
+            throw new Error('El archivo descargado no es un Excel válido (posiblemente una página de login). Verifica el link de SharePoint.');
+        }
         const wb = XLSX.read(buffer, { type: 'array', cellDates: false });
         procesarWorkbook(wb);
         const now = new Date().toLocaleString('es-MX');
         setEl('syncStatus', '• Actualizado: ' + now);
-        document.getElementById('footerFuente').textContent = 'Última actualización: ' + now + ' • Fuente: Reporte_Papa_Graficos.xlsx en GitHub';
+        document.getElementById('footerFuente').textContent = 'Última actualización: ' + now + ' • Fuente: gastos.xlsx';
     } catch(err) {
-        document.getElementById('errorBanner').classList.add('show');
-        document.getElementById('errorDetail').textContent = ' (' + err.message + ')';
-        console.warn('GitHub fetch fallido:', err);
+        showError('No se pudo cargar el Excel.', err.message);
         if (!datosLoaded) showEmptyState();
     } finally {
         document.getElementById('loadingOverlay').classList.add('hidden');
@@ -819,7 +833,7 @@ document.getElementById('fileInputHidden').addEventListener('change', function(e
             setEl('syncStatus', '• Cargado manualmente: ' + now);
             document.getElementById('footerFuente').textContent = 'Cargado manualmente: ' + file.name + ' • ' + now;
         } catch(err) {
-            alert('Error al procesar el Excel: ' + err.message);
+            showError('Error al procesar el archivo: ' + file.name, err.message);
         } finally {
             document.getElementById('loadingOverlay').classList.add('hidden');
         }

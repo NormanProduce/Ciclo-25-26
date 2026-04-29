@@ -846,7 +846,8 @@
       btn.disabled = false;
       btn.style.background = '#4a7a20';
       btn.querySelector('.btn-text').textContent = '✓ Bienvenido';
-      // Hide form and show menu
+      // Guardar sesión y mostrar menú
+      sessionStorage.setItem('np_logged', '1');
       document.getElementById('loginForm').style.display = 'none';
       document.getElementById('menu').style.display = 'block';
       setTimeout(() => {

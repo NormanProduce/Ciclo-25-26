@@ -344,6 +344,7 @@
                 <li><a href="#top10">Top 10</a></li>
                 <li><a href="#pendientes">Pendientes</a></li>
                 <li><a href="INGRESOS.html" class="nav-ingresos"><i class="fas fa-money-bill-wave"></i> Ver Ingresos</a></li>
+                <li><a href="#" onclick="cerrarSesion()" style="color:var(--text-light);font-size:0.88em;opacity:0.7;" title="Cerrar sesión"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
             </ul>
         </nav>
     </div>
@@ -597,6 +598,12 @@
 </footer>
 
 <script>
+// ══════════════════════════════════════════════════════
+// SESIÓN
+// ══════════════════════════════════════════════════════
+if (!sessionStorage.getItem('np_logged')) { location.replace('index.html'); }
+function cerrarSesion() { sessionStorage.removeItem('np_logged'); location.replace('index.html'); }
+
 // ══════════════════════════════════════════════════════
 // CONFIGURACIÓN
 // ══════════════════════════════════════════════════════

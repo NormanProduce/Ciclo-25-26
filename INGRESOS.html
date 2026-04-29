@@ -75,8 +75,11 @@
             border-radius: 8px;
             font-size: 0.9em;
         }
-
         #errorBanner.show { display: block; }
+        #errorBanner .err-title { font-weight: 700; }
+        #errorBanner .err-detail { display: block; margin-top: 4px; font-family: monospace; font-size: 0.85em; opacity: 0.85; word-break: break-all; }
+        #errorBanner .err-close { float: right; cursor: pointer; font-weight: 700; font-size: 1.1em; margin-left: 12px; opacity: 0.6; }
+        #errorBanner .err-close:hover { opacity: 1; }
 
         /* SYNC BAR */
         .sync-bar {
@@ -410,10 +413,10 @@
 
 <!-- ERROR BANNER -->
 <div id="errorBanner">
+    <span class="err-close" onclick="this.parentElement.classList.remove('show')">✕</span>
     <i class="fas fa-exclamation-triangle"></i>
-    <strong>No se pudo cargar el Excel desde GitHub.</strong>
-    Se muestran los datos de la última sesión o los valores predeterminados.
-    <span id="errorDetail"></span>
+    <span class="err-title" id="errorTitle"> Error al cargar datos</span>
+    <span class="err-detail" id="errorDetail"></span>
 </div>
 
 <!-- HEADER -->
@@ -425,7 +428,7 @@
                 <li><a href="#ingresos">Ingresos</a></li>
                 <li><a href="#embarques">Embarques</a></li>
                 <li><a href="#naturasol">Naturasol</a></li>
-                <li><a href="index.html" class="nav-gastos"><i class="fas fa-receipt"></i> Ver Gastos</a></li>
+                <li><a href="Gastos.html" class="nav-gastos"><i class="fas fa-receipt"></i> Ver Gastos</a></li>
             </ul>
         </nav>
     </div>
@@ -775,6 +778,13 @@ function setEl(id, val) {
     if (el) el.textContent = val;
 }
 
+function showError(title, detail) {
+    setEl('errorTitle', ' ' + title);
+    setEl('errorDetail', detail || '');
+    document.getElementById('errorBanner').classList.add('show');
+    console.error('[Ingresos]', title, detail);
+}
+
 // ══════════════════════════════════════════════════════
 // CARGA DESDE GITHUB
 // ══════════════════════════════════════════════════════
@@ -792,16 +802,19 @@ async function cargarDesdeGitHub() {
 
     try {
         const resp = await fetch(url);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status} — URL: ${EXCEL_URL}`);
         const buffer = await resp.arrayBuffer();
+        const header = new Uint8Array(buffer.slice(0, 4));
+        if (header[0] !== 0x50 || header[1] !== 0x4B) {
+            throw new Error('El archivo descargado no es un Excel válido (posiblemente una página de login). Verifica el link de SharePoint.');
+        }
         const wb = XLSX.read(buffer, { type: 'array', cellDates: false });
         procesarWorkbook(wb);
         const now = new Date().toLocaleString('es-MX');
         setEl('lastUpdate', '• Actualizado: ' + now);
-        document.getElementById('footerUpdate').textContent = 'Última actualización: ' + now + ' • Fuente: EMBARQUES_PAPA.xlsx en GitHub';
+        document.getElementById('footerUpdate').textContent = 'Última actualización: ' + now + ' • Fuente: ingresos.xlsx';
     } catch (err) {
-        document.getElementById('errorBanner').classList.add('show');
-        document.getElementById('errorDetail').textContent = ' (' + err.message + ')';
+        showError('No se pudo cargar el Excel.', err.message);
         console.error('Error cargando Excel:', err);
     } finally {
         document.getElementById('loadingOverlay').classList.add('hidden');
@@ -1294,7 +1307,7 @@ document.getElementById('fileInputHidden').addEventListener('change', function(e
             setEl('lastUpdate', '• Cargado manualmente: ' + now);
             document.getElementById('footerUpdate').textContent = 'Cargado manualmente: ' + file.name + ' • ' + now;
         } catch(err) {
-            alert('Error al procesar el Excel: ' + err.message);
+            showError('Error al procesar el archivo: ' + file.name, err.message);
         } finally {
             document.getElementById('loadingOverlay').classList.add('hidden');
         }

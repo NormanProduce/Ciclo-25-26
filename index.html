@@ -473,14 +473,15 @@
     letter-spacing: 0.1em;
   }
 
-  .menu a {
+  .menu-btn {
     display: inline-block;
     margin: 10px;
     padding: 15px 30px;
     background-color: var(--green-accent);
     color: white;
     text-decoration: none;
-    border-radius: 8px;
+    border: none;
+    cursor: pointer;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 14px;
     font-weight: 700;
@@ -489,8 +490,97 @@
     transition: background 0.3s;
   }
 
-  .menu a:hover {
+  .menu-btn:hover {
     background-color: var(--green-mid);
+  }
+
+  /* Cycle selector */
+  .cycle-selector {
+    display: none;
+    text-align: center;
+    animation: fadeIn 0.25s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .cycle-selector .cycle-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+    padding: 0;
+    transition: color 0.2s;
+  }
+
+  .cycle-selector .cycle-back:hover { color: var(--green-accent); }
+
+  .cycle-selector .cycle-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    margin-bottom: 8px;
+  }
+
+  .cycle-selector h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    margin-bottom: 24px;
+    letter-spacing: 0.08em;
+  }
+
+  .cycle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cycle-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+  }
+
+  .cycle-item:hover {
+    border-color: var(--green-accent);
+    background: rgba(74,122,32,0.05);
+    color: var(--green-accent);
+  }
+
+  .cycle-item .cycle-arrow {
+    color: var(--border);
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .cycle-item:hover .cycle-arrow {
+    color: var(--green-accent);
+    transform: translateX(4px);
   }
 
   /* Loading state */
@@ -642,6 +732,110 @@
     .right { width: 100%; max-width: 480px; margin: auto; }
     body { background: var(--cream); }
   }
+
+  /* ── User profile widget ── */
+  .user-widget {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 260px;
+    z-index: 100;
+  }
+
+  .user-widget-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .user-widget-btn:hover { background: #e8e4da; border-color: var(--sand); }
+
+  .user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--green-accent);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: 0.04em;
+  }
+
+  .user-info { flex: 1; min-width: 0; }
+
+  .user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .user-email {
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .user-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.2s; }
+  .user-widget.open .user-chevron { transform: rotate(180deg); }
+
+  .user-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 200px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.11);
+    overflow: hidden;
+    z-index: 300;
+    animation: fadeIn 0.15s ease;
+  }
+
+  .user-widget.open .user-dropdown { display: block; }
+
+  .user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-family: 'Barlow', sans-serif;
+    color: var(--text-dark);
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .user-menu-item:hover { background: #f5f2ec; }
+  .user-menu-item svg { flex-shrink: 0; color: var(--text-muted); }
+  .user-menu-item.danger { color: #c0392b; border-top: 1px solid var(--border); }
+  .user-menu-item.danger svg { color: #c0392b; }
 </style>
 </head>
 <body>
@@ -673,6 +867,37 @@
 
 <!-- RIGHT: Login form -->
 <div class="right">
+
+  <!-- User profile widget — visible when logged in -->
+  <div class="user-widget" id="userWidget">
+    <button class="user-widget-btn" onclick="toggleUserWidget()" type="button">
+      <div class="user-avatar" id="userAvatar">CR</div>
+      <div class="user-info">
+        <div class="user-name" id="userNameDisplay">Carlos Robles</div>
+        <div class="user-email" id="userEmailDisplay">carlos.robles@mail.com</div>
+      </div>
+      <svg class="user-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="user-dropdown">
+      <button class="user-menu-item" onclick="menuAccion('perfil')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Perfil
+      </button>
+      <button class="user-menu-item" onclick="menuAccion('config')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Configuración
+      </button>
+      <button class="user-menu-item" onclick="menuAccion('usuarios')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Usuarios
+      </button>
+      <button class="user-menu-item danger" onclick="cerrarSesion()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Cerrar sesión
+      </button>
+    </div>
+  </div>
+
   <div class="form-header">
     <div class="form-eyebrow">Acceso al sistema</div>
     <h2>Iniciar<br>Sesión</h2>
@@ -719,10 +944,28 @@
     </button>
   </form>
 
+  <div class="cycle-selector" id="cycleSelector">
+    <h3>Selecciona el ciclo</h3>
+    <div class="cycle-list">
+      <button class="cycle-item" onclick="showMenu('Ciclo 25-26')">
+        <span>Ciclo 25-26</span>
+        <svg class="cycle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <button class="cycle-item" onclick="showMenu('Ciclo 26-27')">
+        <span>Ciclo 26-27</span>
+        <svg class="cycle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+
   <div class="menu" id="menu">
+    <button class="cycle-item" onclick="showCycles()" style="width:100%;background:none;text-align:left;">
+      <span>Regresar</span>
+      <svg class="cycle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <div class="cycle-label" id="cycleActive"></div>
     <h3>Selecciona una opción:</h3>
-    <a href="INGRESOS.html">Ingresos</a>
-    <a href="Gastos.html">Gastos</a>
+    <div class="cycle-list" id="sectionList"></div>
   </div>
 
   <div class="divider"><span>o</span></div>
@@ -788,6 +1031,58 @@
 </div>
 
 <script>
+  // Usuarios del sistema
+  const USERS_KEY = 'np_users';
+  const defaultUsers = [
+    { id:'u1', nombre:'Carlos Robles', email:'carlos.robles@mail.com', username:'admin', password:'Norman01', rol:'Administrador' }
+  ];
+  function getUsers() {
+    try { return JSON.parse(localStorage.getItem(USERS_KEY)) || defaultUsers; } catch { return defaultUsers; }
+  }
+  function findUser(username, password) {
+    return getUsers().find(u => u.username === username && u.password === password) || null;
+  }
+
+  // Widget de usuario
+  function showUserWidget(user) {
+    const initials = user.nombre.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('userAvatar').textContent = initials;
+    document.getElementById('userNameDisplay').textContent = user.nombre;
+    document.getElementById('userEmailDisplay').textContent = user.email;
+    document.getElementById('userWidget').style.display = 'block';
+  }
+
+  function toggleUserWidget() {
+    document.getElementById('userWidget').classList.toggle('open');
+  }
+
+  document.addEventListener('click', e => {
+    const w = document.getElementById('userWidget');
+    if (!w.contains(e.target)) w.classList.remove('open');
+  });
+
+  function menuAccion(accion) {
+    document.getElementById('userWidget').classList.remove('open');
+    // Placeholder — aquí irán las páginas correspondientes
+    alert('Próximamente: ' + accion.charAt(0).toUpperCase() + accion.slice(1));
+  }
+
+  function cerrarSesion() {
+    sessionStorage.removeItem('np_logged');
+    sessionStorage.removeItem('np_current_user');
+    location.reload();
+  }
+
+  // Si ya hay sesión activa, saltar directo al selector de ciclo
+  if (sessionStorage.getItem('np_logged') === '1') {
+    const stored = sessionStorage.getItem('np_current_user');
+    const user = stored ? JSON.parse(stored) : defaultUsers[0];
+    showUserWidget(user);
+    document.getElementById('loginForm').style.display = 'none';
+    document.querySelector('.form-header').style.display = 'none';
+    document.getElementById('cycleSelector').style.display = 'block';
+  }
+
   // Toggle password visibility
   const togglePw = document.getElementById('togglePw');
   const pwInput  = document.getElementById('password');
@@ -832,7 +1127,8 @@
 
     if (!valid) return;
 
-    if (emailValue !== 'admin' || pass.value !== 'Norman01') {
+    const matchedUser = findUser(emailValue, pass.value);
+    if (!matchedUser) {
       showErrorDialog();
       return;
     }
@@ -846,10 +1142,13 @@
       btn.disabled = false;
       btn.style.background = '#4a7a20';
       btn.querySelector('.btn-text').textContent = '✓ Bienvenido';
-      // Guardar sesión y mostrar menú
+      // Guardar sesión y mostrar selector de ciclo
       sessionStorage.setItem('np_logged', '1');
+      sessionStorage.setItem('np_current_user', JSON.stringify(matchedUser));
+      showUserWidget(matchedUser);
       document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('menu').style.display = 'block';
+      document.querySelector('.form-header').style.display = 'none';
+      document.getElementById('cycleSelector').style.display = 'block';
       setTimeout(() => {
         btn.style.background = '';
         btn.querySelector('.btn-text').textContent = 'Entrar';
@@ -886,6 +1185,33 @@
   }
 
   document.getElementById('errorClose').addEventListener('click', hideErrorDialog);
+
+  // Navigation
+  const cyclePages = {
+    'Ciclo 25-26': { ingresos: 'INGRESOS.html', gastos: 'Gastos.html' },
+    'Ciclo 26-27': { ingresos: 'INGRESOS_2627.html', gastos: 'Gastos_2627.html', datos: 'Datos_2627.html' }
+  };
+
+  const arrow = `<svg class="cycle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+
+  function showMenu(ciclo) {
+    const pages = cyclePages[ciclo];
+    document.getElementById('cycleActive').textContent = ciclo;
+    let items = `
+      <a class="cycle-item" href="${pages.ingresos}"><span>Ingresos</span>${arrow}</a>
+      <a class="cycle-item" href="${pages.gastos}"><span>Gastos</span>${arrow}</a>`;
+    if (pages.datos) {
+      items += `<a class="cycle-item" href="${pages.datos}"><span>Datos</span>${arrow}</a>`;
+    }
+    document.getElementById('sectionList').innerHTML = items;
+    document.getElementById('cycleSelector').style.display = 'none';
+    document.getElementById('menu').style.display = 'block';
+  }
+
+  function showCycles() {
+    document.getElementById('menu').style.display = 'none';
+    document.getElementById('cycleSelector').style.display = 'block';
+  }
 </script>
 </body>
 </html>

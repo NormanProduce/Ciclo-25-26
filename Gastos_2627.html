@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gastos | Proyecto PAPA 2026-2027</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-green: #4a7a20; --dark-green: #1a2b0e; --light-green: #e8ede0;
+            --text-dark: #0e1108; --text-light: #7a7460; --border-color: #d4cdb8;
+            --bg-gray: #f5f2ec; --sand: #c8b98a; --green-mid: #2e4a18; --cream: #f5f2ec;
+        }
+        body { font-family: 'Barlow', sans-serif; color: var(--text-dark); line-height: 1.6; background: #fff; overflow-x: hidden; }
+
+        /* ACTION BAR */
+        .action-bar { background: var(--light-green); border-bottom: 1px solid #c8e6c9; padding: 10px 40px; display: flex; align-items: center; justify-content: space-between; gap: 15px; font-size: 0.85em; color: var(--dark-green); flex-wrap: wrap; }
+        .action-bar-left { display: flex; align-items: center; gap: 10px; }
+        .action-bar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .btn-action { background: var(--primary-green); color: white; border: none; padding: 7px 18px; border-radius: 20px; font-size: 0.85em; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 7px; transition: all 0.3s; font-family: inherit; }
+        .btn-action:hover { background: var(--dark-green); transform: translateY(-1px); }
+        .btn-action.sec { background: transparent; color: var(--dark-green); border: 1.5px solid var(--dark-green); }
+        .btn-action.sec:hover { background: var(--dark-green); color: white; }
+
+        /* HEADER */
+        header { background: #fff; border-bottom: 3px solid var(--primary-green); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .header-container { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; }
+        .btn-back { display: inline-flex; align-items: center; gap: 7px; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); background: none; border: 1px solid var(--border-color); padding: 7px 14px; cursor: pointer; text-decoration: none; transition: color 0.2s, border-color 0.2s, background 0.2s; margin-right: 16px; flex-shrink: 0; }
+        .btn-back:hover { color: var(--primary-green); border-color: var(--primary-green); background: rgba(74,122,32,0.05); }
+        nav ul { display: flex; list-style: none; gap: 25px; align-items: center; }
+        nav a { color: var(--text-dark); text-decoration: none; font-weight: 500; font-size: 0.95em; transition: color 0.3s; }
+        nav a:hover { color: var(--primary-green); }
+        nav a.nav-ingresos { background: var(--primary-green); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.88em; transition: all 0.3s; }
+        nav a.nav-ingresos:hover { background: var(--dark-green); }
+
+        /* HERO */
+        .hero { background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; padding: 80px 40px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%; }
+        .hero-container { position: relative; z-index: 1; }
+        .hero h1 { font-size: 3em; margin-bottom: 20px; font-weight: 700; letter-spacing: -1px; }
+        .hero p { font-size: 1.3em; margin-bottom: 30px; opacity: 0.95; font-weight: 500; }
+        .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 40px; }
+        .stat-box { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: transform 0.3s; }
+        .stat-box:hover { transform: translateY(-5px); }
+        .stat-box .number { font-size: 2.2em; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .stat-box .label { font-size: 0.85em; opacity: 0.9; font-weight: 500; }
+
+        /* CONTAINER / SECTIONS */
+        .container { padding: 40px; }
+        .section { margin-bottom: 60px; }
+        .section-title { font-size: 2.2em; color: var(--dark-green); margin-bottom: 30px; padding-bottom: 15px; border-bottom: 3px solid var(--primary-green); display: flex; align-items: center; gap: 15px; font-weight: 700; letter-spacing: -0.5px; }
+        .section-title i { color: var(--primary-green); }
+
+        /* CARDS */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 30px; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card:hover { box-shadow: 0 8px 20px rgba(0,166,81,0.15); transform: translateY(-5px); border-color: var(--primary-green); }
+        .card-icon { font-size: 2.5em; color: var(--primary-green); margin-bottom: 15px; }
+        .card-title { font-size: 0.85em; color: var(--text-light); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; font-weight: 600; }
+        .card-amount { font-size: 2em; color: var(--dark-green); font-weight: 700; margin-bottom: 10px; letter-spacing: -0.5px; }
+        .card-detail { font-size: 0.85em; color: var(--text-light); font-weight: 500; }
+
+        /* CHARTS */
+        .charts-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        .chart-wrapper { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .chart-title { font-size: 1.1em; color: var(--dark-green); margin-bottom: 20px; font-weight: 700; }
+        .chart-container { position: relative; height: 300px; }
+
+        /* TABLES */
+        .table-wrapper { background: white; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 30px; }
+        .table-title { font-size: 1.2em; color: var(--dark-green); padding: 22px 25px; border-bottom: 2px solid var(--primary-green); font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: var(--light-green); }
+        th { padding: 14px 18px; text-align: left; font-weight: 600; color: var(--dark-green); font-size: 0.9em; letter-spacing: 0.5px; }
+        td { padding: 13px 18px; border-bottom: 1px solid var(--border-color); font-size: 0.92em; }
+        tbody tr:hover { background: var(--light-green); }
+        .amount { font-weight: 700; color: var(--primary-green); }
+        .warning { color: #f59e0b; font-weight: 700; }
+        .percentage { color: var(--text-light); font-weight: 600; }
+        .success { color: var(--primary-green); font-weight: 700; }
+        .progress-bar-wrap { width: 100%; background: #e5e7eb; border-radius: 4px; height: 8px; margin-top: 4px; }
+        .progress-bar-fill { height: 8px; border-radius: 4px; background: var(--primary-green); }
+        .categoria-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+        .badge-adm { background: #dbeafe; color: #1d4ed8; }
+        .badge-op { background: #dcfce7; color: #15803d; }
+        .btn-row { background: none; border: none; cursor: pointer; padding: 4px 7px; border-radius: 4px; font-size: 0.85em; transition: background 0.2s; }
+        .btn-row-edit { color: var(--primary-green); }
+        .btn-row-edit:hover { background: #dcfce7; }
+        .btn-row-del { color: #ef4444; }
+        .btn-row-del:hover { background: #fee2e2; }
+
+        /* HIGHLIGHT */
+        .highlight-box { background: var(--light-green); border-left: 5px solid var(--primary-green); padding: 25px; margin-bottom: 25px; border-radius: 8px; }
+        .highlight-box h3 { color: var(--dark-green); margin-bottom: 15px; font-size: 1.15em; font-weight: 700; }
+        .highlight-box ul { margin-left: 20px; }
+        .highlight-box li { margin-bottom: 10px; color: var(--text-dark); font-weight: 500; }
+        .highlight-box strong { color: var(--primary-green); font-weight: 700; }
+        .btn { display: inline-block; padding: 12px 30px; background: var(--primary-green); color: white; text-decoration: none; border-radius: 6px; transition: all 0.3s; border: none; cursor: pointer; font-size: 0.95em; font-weight: 700; }
+        .btn:hover { background: var(--dark-green); transform: translateY(-2px); }
+        .text-center { text-align: center; }
+        .mt-40 { margin-top: 40px; }
+        .mb-30 { margin-bottom: 30px; }
+        footer { background: #2a2a2a; color: white; padding: 40px; text-align: center; margin-top: 60px; border-top: 3px solid var(--primary-green); }
+        footer p { margin-bottom: 10px; opacity: 0.9; font-weight: 500; }
+
+        /* MODAL */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(14,17,8,0.55); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.open { display: flex; }
+        .modal-card { background: white; border-radius: 12px; width: 90%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 22px 26px; border-bottom: 2px solid var(--primary-green); }
+        .modal-header h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.4em; font-weight: 700; color: var(--dark-green); text-transform: uppercase; }
+        .modal-close { background: none; border: none; font-size: 1.4em; cursor: pointer; color: var(--text-light); transition: color 0.2s; }
+        .modal-close:hover { color: #ef4444; }
+        .modal-body { padding: 26px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-light); margin-bottom: 7px; }
+        .form-group input, .form-group select { width: 100%; height: 44px; background: #fff; border: 1px solid var(--border-color); padding: 0 14px; font-family: 'Barlow', sans-serif; font-size: 14px; color: var(--text-dark); outline: none; border-radius: 4px; transition: border-color 0.2s; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary-green); box-shadow: 0 0 0 3px rgba(74,122,32,0.1); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .modal-footer { padding: 18px 26px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 12px; }
+        .btn-cancel { background: none; border: 1px solid var(--border-color); color: var(--text-light); padding: 10px 22px; border-radius: 6px; font-family: 'Barlow', sans-serif; font-size: 0.9em; font-weight: 600; cursor: pointer; }
+        .btn-save { background: var(--primary-green); color: white; border: none; padding: 10px 24px; border-radius: 6px; font-family: 'Barlow', sans-serif; font-size: 0.9em; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .btn-save:hover { background: var(--dark-green); }
+
+        h1,h2,h3,.section-title,.hero h1,.card-amount,.stat-box .number,.table-title,.chart-title { font-family: 'Barlow Condensed', sans-serif; }
+        nav a { font-family: 'Barlow', sans-serif; }
+        @media (max-width: 768px) {
+            .header-container { padding: 15px 20px; flex-wrap: wrap; gap: 15px; }
+            .hero h1 { font-size: 2em; }
+            .hero-stats { grid-template-columns: repeat(2,1fr); }
+            .container { padding: 20px; }
+            .charts-section { grid-template-columns: 1fr; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .action-bar { padding: 10px 20px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="header-container">
+        <div style="display:flex;align-items:center;">
+            <a href="index.html" class="btn-back">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Ciclos
+            </a>
+            <img src="Imagenes/norman_logo.png" alt="Norman Produce" style="height:46px;object-fit:contain;filter:brightness(0);">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#resumen">Resumen</a></li>
+                <li><a href="#cultivos">Por Cultivo</a></li>
+                <li><a href="#gastos">Gastos</a></li>
+                <li><a href="#top10">Top 10</a></li>
+                <li><a href="#pendientes">Pendientes</a></li>
+                <li><a href="INGRESOS_2627.html" class="nav-ingresos"><i class="fas fa-money-bill-wave"></i> Ver Ingresos</a></li>
+                <li><a href="#" onclick="cerrarSesion()" style="color:var(--text-light);font-size:0.88em;opacity:0.7;" title="Salir"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-container">
+        <h1>Gastos Papa 26-27</h1>
+        <p id="heroSubtitle">Proyecto PAPA | Gastos Operacionales | Norman Produce</p>
+        <div class="hero-stats">
+            <div class="stat-box"><div class="number" id="heroGastoTotal">—</div><div class="label">Gasto Total</div></div>
+            <div class="stat-box"><div class="number" id="heroPagado">—</div><div class="label">Total Pagado</div></div>
+            <div class="stat-box"><div class="number" id="heroPendiente">—</div><div class="label">Pendiente</div></div>
+            <div class="stat-box"><div class="number" id="heroCostoHa">—</div><div class="label">Costo / Hectárea</div></div>
+            <div class="stat-box"><div class="number" id="heroHectareas">—</div><div class="label">Hectáreas</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- MAIN -->
+<div class="container">
+
+    <section class="section" id="resumen">
+        <h2 class="section-title"><i class="fas fa-chart-pie"></i> Resumen Ejecutivo</h2>
+        <div class="cards-grid">
+            <div class="card"><div class="card-icon"><i class="fas fa-receipt"></i></div><div class="card-title">Gasto Total</div><div class="card-amount" id="cardGastoTotal">—</div><div class="card-detail" id="cardGastoTotalDetalle">Cultivos + Gastos Generales</div></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-check-circle"></i></div><div class="card-title">Total Pagado</div><div class="card-amount success" id="cardPagado">—</div><div class="card-detail" id="cardPagadoPct">—</div></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="card-title">Pendiente de Pago</div><div class="card-amount warning" id="cardPendiente">—</div><div class="card-detail" id="cardPendientePct">—</div></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-layer-group"></i></div><div class="card-title">Gastos Generales</div><div class="card-amount" id="cardGastoGeneral">—</div><div class="card-detail" id="cardGastoGeneralPct">Aplican a todos los cultivos</div></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-seedling"></i></div><div class="card-title">Gastos Operativos</div><div class="card-amount" id="cardOperativos">—</div><div class="card-detail">Producción e insumos directos</div></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-building"></i></div><div class="card-title">Gastos Administrativos</div><div class="card-amount" id="cardAdministracion">—</div><div class="card-detail" id="cardAdmPct">—</div></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-tractor"></i></div><div class="card-title">Costo / Hectárea</div><div class="card-amount" id="cardCostoHa">—</div><div class="card-detail" id="cardHectareas">—</div></div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title"><i class="fas fa-chart-bar"></i> Visualización de Datos</h2>
+        <div class="charts-section">
+            <div class="chart-wrapper"><div class="chart-title">Distribución del Gasto por Área</div><div class="chart-container"><canvas id="chartArea"></canvas></div></div>
+            <div class="chart-wrapper"><div class="chart-title">Estado de Pagos: Pagado vs Pendiente</div><div class="chart-container"><canvas id="chartPagos"></canvas></div></div>
+        </div>
+        <div class="charts-section">
+            <div class="chart-wrapper" style="grid-column:1/-1;"><div class="chart-title">Top 10 Rubros de Gasto Operacional</div><div class="chart-container" style="height:380px;"><canvas id="chartTop10"></canvas></div></div>
+        </div>
+        <div class="charts-section">
+            <div class="chart-wrapper"><div class="chart-title">Gastos por Categoría — Operación</div><div class="chart-container" style="height:350px;"><canvas id="chartCategoriasOp"></canvas></div></div>
+            <div class="chart-wrapper"><div class="chart-title">Gastos por Categoría — Administración</div><div class="chart-container"><canvas id="chartCategoriasAdm"></canvas></div></div>
+        </div>
+        <div class="charts-section">
+            <div class="chart-wrapper" style="grid-column:1/-1;"><div class="chart-title">Gasto Mensual por Categoría (Operación)</div><div class="chart-container" style="height:420px;"><canvas id="chartMensual"></canvas></div></div>
+        </div>
+    </section>
+
+    <section class="section" id="cultivos">
+        <h2 class="section-title"><i class="fas fa-seedling"></i> Gastos por Cultivo</h2>
+        <div class="table-wrapper">
+            <div class="table-title">Resumen por Cultivo</div>
+            <table><thead><tr><th>Cultivo</th><th style="text-align:right;">Hectáreas</th><th style="text-align:right;">Total Invertido</th><th style="text-align:right;">Total Pagado</th><th style="text-align:right;">Pendiente</th><th style="text-align:center;">% del Total</th><th style="text-align:right;">Costo / Ha</th></tr></thead>
+            <tbody id="tbodyCultivos"></tbody></table>
+        </div>
+    </section>
+
+    <section class="section" id="gastos">
+        <h2 class="section-title"><i class="fas fa-wallet"></i> Desglose por Área</h2>
+        <div class="table-wrapper">
+            <div class="table-title">Gastos Operacionales vs Administrativos</div>
+            <table><thead><tr><th>Tipo</th><th>Descripción</th><th style="text-align:right;">Total Invertido</th><th style="text-align:right;">Total Pagado</th><th style="text-align:right;">Pendiente</th><th style="text-align:center;">% del Total</th></tr></thead>
+            <tbody id="tbodyArea"></tbody></table>
+        </div>
+        <div class="table-wrapper">
+            <div class="table-title">Detalle por Categoría
+                <a href="Datos_2627.html" class="btn-action" style="font-size:0.72em;padding:5px 14px;text-decoration:none;"><i class="fas fa-database"></i> Capturar Datos</a>
+            </div>
+            <table><thead><tr><th>Cultivo</th><th>Área</th><th>Categoría</th><th style="text-align:right;">Total Invertido</th><th style="text-align:right;">Total Pagado</th><th style="text-align:right;">Pendiente</th><th style="text-align:center;">%</th></tr></thead>
+            <tbody id="tbodyCategorias"></tbody></table>
+        </div>
+    </section>
+
+    <section class="section" id="top10">
+        <h2 class="section-title"><i class="fas fa-list-ol"></i> Top 10 Rubros de Mayor Gasto</h2>
+        <div class="table-wrapper">
+            <div class="table-title">10 Principales Partidas de Gasto Operacional</div>
+            <table><thead><tr><th>#</th><th>Rubro</th><th style="text-align:right;">Total Invertido</th><th style="text-align:center;">%</th><th style="text-align:right;">Ya Pagado</th><th style="text-align:right;">Pendiente</th></tr></thead>
+            <tbody id="tbodyTop10"></tbody></table>
+        </div>
+    </section>
+
+    <section class="section" id="pendientes">
+        <h2 class="section-title"><i class="fas fa-exclamation-circle"></i> Pagos Pendientes</h2>
+        <div class="highlight-box" style="border-left-color:#f59e0b;background:#fef3c7;">
+            <h3 style="color:#b45309;">⚠️ Compromisos a Liquidar</h3>
+            <ul>
+                <li><strong id="pendienteTotal">—</strong> total pendiente de pago</li>
+                <li><strong id="pendienteTransacciones">—</strong> categorías con saldo pendiente</li>
+                <li>El <strong id="pendientePct">—</strong> del gasto total aún no ha sido liquidado</li>
+            </ul>
+        </div>
+        <div class="table-wrapper">
+            <div class="table-title">Proveedores con Saldo Pendiente</div>
+            <table><thead><tr><th>Proveedor</th><th>Categorías con pendiente</th><th style="text-align:right;">Total Invertido</th><th style="text-align:right;">Total Pagado</th><th style="text-align:right;">Pendiente</th><th style="text-align:center;">% del Pendiente</th></tr></thead>
+            <tbody id="tbodyPendientes"></tbody></table>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title"><i class="fas fa-lightbulb"></i> Hallazgos Clave</h2>
+        <div class="highlight-box"><h3>✅ Control Presupuestario</h3><ul><li id="hallazgo1">—</li><li id="hallazgo2">—</li></ul></div>
+        <div class="highlight-box"><h3>💡 Concentración de Gastos</h3><ul><li id="hallazgo3">—</li><li id="hallazgo4">—</li></ul></div>
+        <div class="highlight-box"><h3>📈 Eficiencia Operacional</h3><ul><li id="hallazgo5">—</li><li id="hallazgo6">—</li></ul></div>
+    </section>
+
+    <section class="section text-center">
+        <div class="highlight-box">
+            <h3 style="font-size:1.5em;margin-bottom:20px;">✅ CONCLUSIÓN FINAL</h3>
+            <p style="font-size:1.1em;margin-bottom:20px;">El <strong>Proyecto PAPA Ciclo 2026-2027</strong> muestra un <strong>CONTROL FINANCIERO SÓLIDO</strong></p>
+            <p style="font-size:0.95em;line-height:1.8;" id="conclusion2">Ingresa datos para ver el análisis.</p>
+            <div class="mt-40 mb-30" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+                <a href="Datos_2627.html" class="btn"><i class="fas fa-database"></i> Capturar Datos</a>
+                <a href="INGRESOS_2627.html" class="btn" style="background:var(--green-mid);"><i class="fas fa-money-bill-wave"></i> Ver Ingresos</a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <div><p><strong>Reporte Financiero | Proyecto PAPA 2026-2027</strong></p><p>Norman Produce | Gastos Operacionales | Captura Manual</p><p style="margin-top:15px;font-size:0.9em;opacity:0.7;">Datos guardados en este dispositivo</p></div>
+</footer>
+
+<script>
+if (!sessionStorage.getItem('np_logged')) { location.replace('index.html'); }
+function cerrarSesion() { sessionStorage.removeItem('np_logged'); sessionStorage.removeItem('np_current_user'); location.replace('index.html'); }
+
+const LS_KEY = 'np_gastos_2627';
+let data = { proyecto: 'Proyecto Papa 2026-2027', hectareas: 0, cultivos: [], categorias: [] };
+let charts = {};
+
+function load() {
+    const s = localStorage.getItem(LS_KEY);
+    if (s) { try { data = JSON.parse(s); } catch(e) {} }
+    if ((data.cultivos||[]).length && typeof data.cultivos[0] === 'string') {
+        data.cultivos = data.cultivos.map(n => ({ nombre: n, hectareas: 0 }));
+    }
+    refresh();
+}
+
+function save() { localStorage.setItem(LS_KEY, JSON.stringify(data)); }
+
+const fmt  = n => '$' + Number(n).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+const fmtM = n => { if(n>=1e6) return '$'+(n/1e6).toFixed(2)+'M'; if(n>=1000) return '$'+(n/1000).toFixed(0)+'K'; return '$'+Number(n).toFixed(0); };
+const fmtP = n => (n*100).toFixed(1)+'%';
+const setEl = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+
+function refresh() {
+    const cats = data.categorias || [];
+    const gt  = cats.reduce((s,c)=>s+(c.invertido||0),0);
+    const tp  = cats.reduce((s,c)=>s+(c.pagado||0),0);
+    const pen = gt - tp;
+    const op  = cats.filter(c=>c.area==='Operación').reduce((s,c)=>s+(c.invertido||0),0);
+    const adm = cats.filter(c=>c.area==='Administracion').reduce((s,c)=>s+(c.invertido||0),0);
+    const gg  = cats.filter(c=>!c.cultivo||c.cultivo==='Todos').reduce((s,c)=>s+(c.invertido||0),0);
+    const totalHa = (data.cultivos||[]).reduce((s,c)=>s+(c.hectareas||0),0) || data.hectareas || 0;
+    const ha  = totalHa > 0 ? gt/totalHa : 0;
+    const cultivosCfg = data.cultivos || [];
+    const cP  = cats.map(c=>({...c, pendiente:(c.invertido||0)-(c.pagado||0), pct:gt?(c.invertido||0)/gt:0}));
+
+    // Agrega categorías con mismo nombre+área para evitar duplicados en gráficas y Top 10
+    const aggMap = {};
+    cats.forEach(c => {
+        const key = c.area + '||' + c.categoria;
+        if (!aggMap[key]) aggMap[key] = { area:c.area, categoria:c.categoria, invertido:0, pagado:0 };
+        aggMap[key].invertido += c.invertido||0;
+        aggMap[key].pagado    += c.pagado||0;
+    });
+    const catsAgg = Object.values(aggMap).map(c=>({...c, pendiente:c.invertido-c.pagado, pct:gt?c.invertido/gt:0}));
+    const top = [...catsAgg].filter(c=>c.area==='Operación').sort((a,b)=>b.invertido-a.invertido).slice(0,10).map((c,i)=>({...c,rank:i+1}));
+
+    setEl('heroGastoTotal', fmtM(gt)); setEl('heroPagado', fmtM(tp)); setEl('heroPendiente', fmtM(pen));
+    setEl('heroCostoHa', fmtM(ha)); setEl('heroHectareas', totalHa||'—');
+    setEl('heroSubtitle', data.proyecto+' | Gastos Operacionales | Norman Produce');
+    setEl('cardGastoTotal', fmt(gt));
+    setEl('cardGastoTotalDetalle', gg>0 ? fmt(gg-0)+' generales + '+fmt(gt-gg)+' cultivos' : 'Todos los cultivos');
+    setEl('cardPagado', fmt(tp)); setEl('cardPagadoPct', gt?fmtP(tp/gt)+' del total':'—');
+    setEl('cardPendiente', fmt(pen)); setEl('cardPendientePct', gt?fmtP(pen/gt)+' por liquidar':'—');
+    setEl('cardGastoGeneral', fmt(gg)); setEl('cardGastoGeneralPct', gt?fmtP(gg/gt)+' del gasto total':'Aplican a todos los cultivos');
+    setEl('cardOperativos', fmt(op)); setEl('cardAdministracion', fmt(adm));
+    setEl('cardAdmPct', gt?fmtP(adm/gt)+' del total':'—');
+    setEl('cardCostoHa', fmt(ha)); setEl('cardHectareas', (totalHa||'—')+' hectáreas cultivadas');
+
+    const conPen = cP.filter(c=>c.pendiente>0);
+    setEl('pendienteTotal', fmt(pen)); setEl('pendienteTransacciones', conPen.length);
+    setEl('pendientePct', gt?fmtP(pen/gt):'—');
+
+    // Agrupa gastos por cultivo → área para el desglose
+    const gruposArea = {};
+    cats.forEach(c => {
+        const cv = c.cultivo || 'Todos';
+        if (!gruposArea[cv]) gruposArea[cv] = { op:0, opP:0, adm:0, admP:0 };
+        if (c.area==='Operación') { gruposArea[cv].op  += c.invertido||0; gruposArea[cv].opP += c.pagado||0; }
+        else                       { gruposArea[cv].adm += c.invertido||0; gruposArea[cv].admP+= c.pagado||0; }
+    });
+    const cvNames = [...new Set([...cultivosCfg.map(cv=>cv.nombre), ...cats.filter(c=>c.cultivo&&c.cultivo!=='Todos').map(c=>c.cultivo)])];
+    const allGroups = [...cvNames, ...(gruposArea['Todos']?['Todos']:[])];
+
+    document.getElementById('tbodyArea').innerHTML = (allGroups.length ? allGroups.map(nombre => {
+        const g = gruposArea[nombre]||{op:0,opP:0,adm:0,admP:0};
+        const sub = g.op+g.adm, subP = g.opP+g.admP, subPen = sub-subP;
+        const label = nombre==='Todos'?'Gastos Generales':nombre;
+        return `
+            <tr style="background:#f0f4e8;">
+                <td colspan="6" style="padding:9px 18px;font-weight:800;color:var(--dark-green);font-family:'Barlow Condensed',sans-serif;font-size:1em;letter-spacing:0.06em;border-top:2px solid var(--primary-green);">
+                    ${label==='Gastos Generales'?'<i class="fas fa-layer-group" style="color:var(--text-light);margin-right:6px;font-size:0.85em;"></i>':'<i class="fas fa-seedling" style="color:var(--primary-green);margin-right:6px;font-size:0.85em;"></i>'}${label}
+                </td>
+            </tr>
+            ${g.op>0?`<tr>
+                <td><span class="categoria-badge badge-op">Operación</span></td>
+                <td style="color:var(--text-light);font-size:0.9em;">Producción, insumos y mano de obra</td>
+                <td class="amount" style="text-align:right;">${fmt(g.op)}</td>
+                <td style="text-align:right;">${fmt(g.opP)}</td>
+                <td class="${g.op-g.opP>0?'warning':''}" style="text-align:right;">${fmt(g.op-g.opP)}</td>
+                <td class="percentage" style="text-align:center;">${gt?fmtP(g.op/gt):'—'}</td>
+            </tr>`:''}
+            ${g.adm>0?`<tr>
+                <td><span class="categoria-badge badge-adm">Administración</span></td>
+                <td style="color:var(--text-light);font-size:0.9em;">Nómina administrativa y gastos de oficina</td>
+                <td class="amount" style="text-align:right;">${fmt(g.adm)}</td>
+                <td style="text-align:right;">${fmt(g.admP)}</td>
+                <td class="${g.adm-g.admP>0?'warning':''}" style="text-align:right;">${fmt(g.adm-g.admP)}</td>
+                <td class="percentage" style="text-align:center;">${gt?fmtP(g.adm/gt):'—'}</td>
+            </tr>`:''}
+            <tr style="background:var(--light-green);">
+                <td colspan="2" style="font-weight:700;font-size:0.88em;color:var(--dark-green);padding-left:14px;">Subtotal ${label}</td>
+                <td class="amount" style="text-align:right;">${fmt(sub)}</td>
+                <td style="text-align:right;">${fmt(subP)}</td>
+                <td class="${subPen>0?'warning':''}" style="text-align:right;">${fmt(subPen)}</td>
+                <td class="percentage" style="text-align:center;">${gt?fmtP(sub/gt):'—'}</td>
+            </tr>`;
+    }).join('') : '') +
+    `<tr style="background:var(--dark-green);color:white;font-weight:bold;">
+        <td colspan="2" style="font-family:'Barlow Condensed',sans-serif;letter-spacing:0.06em;font-size:1.05em;">TOTAL GENERAL</td>
+        <td class="amount" style="text-align:right;color:#a8d878;">${fmt(gt)}</td>
+        <td style="text-align:right;">${fmt(tp)}</td>
+        <td style="text-align:right;color:#f59e0b;">${fmt(pen)}</td>
+        <td style="text-align:center;">100%</td>
+    </tr>`;
+
+    // --- Resumen por cultivo ---
+    const byC = {};
+    cP.forEach(c => {
+        const key = c.cultivo || 'Todos';
+        if (!byC[key]) byC[key] = { invertido:0, pagado:0 };
+        byC[key].invertido += c.invertido||0;
+        byC[key].pagado    += c.pagado||0;
+    });
+    const haMap = {};
+    cultivosCfg.forEach(cv => { haMap[cv.nombre] = cv.hectareas||0; });
+    const cultivoRows = [...cultivosCfg.map(cv=>cv.nombre), ...(byC['Todos']?['Todos']:[])];
+    document.getElementById('tbodyCultivos').innerHTML = cultivoRows.length ? cultivoRows.map(nombre => {
+        const r   = byC[nombre] || { invertido:0, pagado:0 };
+        const haC = haMap[nombre] || 0;
+        const pen2 = r.invertido - r.pagado;
+        const costoHa = haC > 0 ? r.invertido/haC : null;
+        return `<tr>
+            <td><strong>${nombre === 'Todos' ? 'Gastos generales' : nombre}</strong></td>
+            <td style="text-align:right;">${nombre!=='Todos' ? haC+' ha' : '—'}</td>
+            <td class="amount" style="text-align:right;">${fmt(r.invertido)}</td>
+            <td style="text-align:right;">${fmt(r.pagado)}</td>
+            <td class="${pen2>0?'warning':''}" style="text-align:right;">${fmt(pen2)}</td>
+            <td class="percentage" style="text-align:center;">${gt?fmtP(r.invertido/gt):'—'}</td>
+            <td class="amount" style="text-align:right;">${costoHa!==null?fmt(costoHa):'—'}</td>
+        </tr>`;
+    }).join('') + `<tr style="background:var(--light-green);font-weight:bold;"><td>TOTAL</td><td style="text-align:right;">${totalHa||'—'} ha</td><td class="amount" style="text-align:right;">${fmt(gt)}</td><td style="text-align:right;">${fmt(tp)}</td><td class="warning" style="text-align:right;">${fmt(pen)}</td><td class="percentage" style="text-align:center;">100%</td><td class="amount" style="text-align:right;">${ha?fmt(ha):'—'}</td></tr>`
+    : '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-light);">Configura los cultivos en la página de Captura de Datos.</td></tr>';
+
+    // --- Detalle por categoría ---
+    const sorted = [...cP].sort((a,b)=>b.invertido-a.invertido);
+    document.getElementById('tbodyCategorias').innerHTML = sorted.length ? sorted.map(c=>`
+        <tr>
+            <td><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.78em;font-weight:700;background:${c.cultivo&&c.cultivo!=='Todos'?'#ede9fe':'#f1f5f9'};color:${c.cultivo&&c.cultivo!=='Todos'?'#6d28d9':'#64748b'};">${c.cultivo&&c.cultivo!=='Todos'?c.cultivo:'General'}</span></td>
+            <td><span class="categoria-badge ${c.area==='Operación'?'badge-op':'badge-adm'}">${c.area}</span></td>
+            <td>${c.categoria}</td>
+            <td class="amount" style="text-align:right;">${fmt(c.invertido||0)}</td>
+            <td style="text-align:right;">${fmt(c.pagado||0)}</td>
+            <td class="${c.pendiente>0?'warning':''}" style="text-align:right;">${fmt(c.pendiente)}</td>
+            <td style="text-align:center;"><div>${fmtP(c.pct)}</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${Math.min(c.pct*300,100)}%"></div></div></td>
+        </tr>`).join('')
+        : '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-light);">Sin registros — ve a "Capturar Datos" para comenzar</td></tr>';
+
+    document.getElementById('tbodyTop10').innerHTML = top.length ? top.map(r=>`
+        <tr><td><strong>${r.rank}</strong></td><td>${r.categoria}</td><td class="amount" style="text-align:right;">${fmt(r.invertido||0)}</td><td class="percentage" style="text-align:center;">${fmtP(r.pct)}</td><td style="text-align:right;">${fmt(r.pagado||0)}</td><td class="${r.pendiente>0?'warning':''}" style="text-align:right;">${fmt(r.pendiente)}</td></tr>`).join('')+
+        `<tr style="background:var(--light-green);font-weight:bold;"><td colspan="2">SUBTOTAL TOP 10</td><td class="amount" style="text-align:right;">${fmt(top.reduce((s,r)=>s+(r.invertido||0),0))}</td><td class="percentage" style="text-align:center;">${fmtP(top.reduce((s,r)=>s+r.pct,0))}</td><td style="text-align:right;">${fmt(top.reduce((s,r)=>s+(r.pagado||0),0))}</td><td class="warning" style="text-align:right;">${fmt(top.reduce((s,r)=>s+r.pendiente,0))}</td></tr>`
+        : '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-light);">Sin datos operacionales</td></tr>';
+
+    // Agrupar por proveedor los registros con pendiente
+    const provMap = {};
+    conPen.forEach(c => {
+        const prov = c.proveedor || c.empresa || '(Sin proveedor)';
+        if (!provMap[prov]) provMap[prov] = { invertido:0, pagado:0, pendiente:0, cats:[] };
+        provMap[prov].invertido  += c.invertido||0;
+        provMap[prov].pagado     += c.pagado||0;
+        provMap[prov].pendiente  += c.pendiente;
+        if (!provMap[prov].cats.includes(c.categoria)) provMap[prov].cats.push(c.categoria);
+    });
+    const provRows = Object.entries(provMap).sort((a,b)=>b[1].pendiente-a[1].pendiente);
+    document.getElementById('tbodyPendientes').innerHTML = provRows.length ? provRows.map(([prov, r])=>`
+        <tr>
+            <td><strong>${prov}</strong></td>
+            <td style="font-size:0.85em;color:var(--text-light);">${r.cats.join(', ')}</td>
+            <td class="amount" style="text-align:right;">${fmt(r.invertido)}</td>
+            <td style="text-align:right;">${fmt(r.pagado)}</td>
+            <td class="warning" style="text-align:right;">${fmt(r.pendiente)}</td>
+            <td style="text-align:center;">${pen?fmtP(r.pendiente/pen):'—'}</td>
+        </tr>`).join('')+
+        `<tr style="background:#fef3c7;font-weight:bold;"><td colspan="4">TOTAL PENDIENTE</td><td class="warning" style="text-align:right;">${fmt(pen)}</td><td style="text-align:center;">100%</td></tr>`
+        : '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--primary-green);font-weight:600;">✅ Sin pagos pendientes</td></tr>';
+
+    setEl('hallazgo1', gt?fmtP(tp/gt)+' de gastos ya pagados':'Agrega registros para ver análisis');
+    setEl('hallazgo2', gt?'Solo '+fmt(pen)+' pendientes ('+fmtP(pen/gt)+')':'—');
+    setEl('hallazgo3', top[0]?top[0].categoria+': '+fmtP(top[0].pct)+' del gasto':'—');
+    setEl('hallazgo4', top[1]?top[1].categoria+': '+fmtP(top[1].pct)+' del gasto':'—');
+    setEl('hallazgo5', ha?'Costo/ha total: '+fmt(ha)+' ('+totalHa+' ha en '+cultivosCfg.length+' cultivos)':'Configura hectáreas por cultivo para ver costo/ha');
+    setEl('hallazgo6', gt?'Operativos: '+fmtP(op/gt)+' | Administración: '+fmtP(adm/gt):'—');
+    setEl('conclusion2', gt?'Con '+fmtP(tp/gt)+' pagado, costo/ha de '+fmt(ha)+' y solo '+fmt(pen)+' pendiente, el proyecto muestra eficiencia operacional.':'Ingresa datos para ver el análisis.');
+
+    // Monthly by category (Operación only, top 8 categories)
+    const mensualMap = {};
+    cats.filter(c=>c.area==='Operación'&&c.fecha).forEach(c=>{
+        const mes = c.fecha.slice(0,7); // YYYY-MM
+        if(!mensualMap[mes]) mensualMap[mes] = {};
+        if(!mensualMap[mes][c.categoria]) mensualMap[mes][c.categoria] = 0;
+        mensualMap[mes][c.categoria] += c.invertido||0;
+    });
+    const meses = Object.keys(mensualMap).sort();
+    const topCatsMensual = [...catsAgg].filter(c=>c.area==='Operación').sort((a,b)=>b.invertido-a.invertido).slice(0,8).map(c=>c.categoria);
+    buildCharts(gt,tp,pen,op,adm,catsAgg,top,meses,mensualMap,topCatsMensual);
+}
+
+const GRN='#4a7a20',LGRN='#6ea840',WARN='#c8a030';
+const CLR=['#4a7a20','#1a2b0e','#6ea840','#2e4a18','#8aad5a','#3d6e1a','#a8c87c','#c8b98a','#5a9030','#3b5e15','#7ab835','#9acc60'];
+
+function buildCharts(gt,tp,pen,op,adm,cats,top,meses,mensualMap,topCatsMensual) {
+    Object.values(charts).forEach(c=>{try{c.destroy();}catch(e){}});
+    charts={};
+    if(!gt) return;
+    const opts = (extra) => ({ responsive:true, maintainAspectRatio:false, ...extra });
+    charts.area = new Chart(document.getElementById('chartArea'),{type:'doughnut',data:{labels:['Operación','Administración'],datasets:[{data:[op,adm],backgroundColor:[GRN,LGRN],borderWidth:3,borderColor:'#fff'}]},options:opts({plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:20}},tooltip:{callbacks:{label:c=>' '+c.label+': '+fmt(c.raw)+' ('+fmtP(c.raw/gt)+')'}}}})});
+    charts.pagos = new Chart(document.getElementById('chartPagos'),{type:'pie',data:{labels:['Ya Pagado ('+fmtP(tp/gt)+')','Pendiente ('+fmtP(pen/gt)+')'],datasets:[{data:[tp,pen],backgroundColor:[GRN,WARN],borderWidth:3,borderColor:'#fff'}]},options:opts({plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:20}},tooltip:{callbacks:{label:c=>' '+c.label.split(' (')[0]+': '+fmt(c.raw)}}}})});
+    if(top.length) charts.top10=new Chart(document.getElementById('chartTop10'),{type:'bar',data:{labels:top.map(r=>r.categoria.length>22?r.categoria.slice(0,22)+'…':r.categoria),datasets:[{label:'Ya Pagado',data:top.map(r=>r.pagado||0),backgroundColor:GRN,borderRadius:3},{label:'Pendiente',data:top.map(r=>r.pendiente),backgroundColor:WARN,borderRadius:3}]},options:opts({indexAxis:'y',scales:{x:{stacked:true,beginAtZero:true,ticks:{callback:v=>'$'+(v/1e6).toFixed(1)+'M'}},y:{stacked:true}},plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:20}},translate:{callbacks:{label:c=>' '+c.dataset.label+': '+fmt(c.raw)}}}})});
+    const catOp=cats.filter(c=>c.area==='Operación').sort((a,b)=>b.invertido-a.invertido).slice(0,12);
+    if(catOp.length) charts.catOp=new Chart(document.getElementById('chartCategoriasOp'),{type:'bar',data:{labels:catOp.map(c=>c.categoria.length>18?c.categoria.slice(0,18)+'…':c.categoria),datasets:[{label:'Gasto ($)',data:catOp.map(c=>c.invertido||0),backgroundColor:CLR,borderRadius:4}]},options:opts({indexAxis:'y',scales:{x:{beginAtZero:true,ticks:{callback:v=>'$'+(v/1e6).toFixed(1)+'M'}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.raw)}}}})});
+    const catAdm=cats.filter(c=>c.area==='Administracion').sort((a,b)=>b.invertido-a.invertido);
+    if(catAdm.length) charts.catAdm=new Chart(document.getElementById('chartCategoriasAdm'),{type:'doughnut',data:{labels:catAdm.map(c=>c.categoria),datasets:[{data:catAdm.map(c=>c.invertido||0),backgroundColor:CLR,borderWidth:2,borderColor:'#fff'}]},options:opts({plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:12,font:{size:11}}},tooltip:{callbacks:{label:c=>' '+c.label+': '+fmt(c.raw)}}}})});
+    // Gasto mensual por categoría
+    if(meses.length && topCatsMensual.length) {
+        const palette = ['#2d7a4f','#4aad75','#f6c344','#e07b2a','#5b9bd5','#a060c8','#e05a5a','#50c8c8'];
+        const datasets = topCatsMensual.map((cat,i)=>({
+            label: cat.length>20?cat.slice(0,20)+'…':cat,
+            data: meses.map(m=>(mensualMap[m]&&mensualMap[m][cat])||0),
+            backgroundColor: palette[i%palette.length],
+            borderRadius: 3,
+            stack: 'stack'
+        }));
+        const mesLabels = meses.map(m=>{
+            const [y,mo] = m.split('-');
+            return new Date(+y,+mo-1,1).toLocaleDateString('es-MX',{month:'short',year:'2-digit'});
+        });
+        charts.mensual = new Chart(document.getElementById('chartMensual'),{
+            type:'bar',
+            data:{labels:mesLabels, datasets},
+            options:opts({
+                scales:{
+                    x:{stacked:true},
+                    y:{stacked:true,beginAtZero:true,ticks:{callback:v=>'$'+(v>=1e6?(v/1e6).toFixed(1)+'M':(v/1e3).toFixed(0)+'K')}}
+                },
+                plugins:{
+                    legend:{position:'bottom',labels:{usePointStyle:true,padding:14,font:{size:11}}},
+                    tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+fmt(c.raw)}}
+                }
+            })
+        });
+    }
+}
+
+load();
+</script>
+<script src="user-widget.js"></script>
+</body>
+</html>

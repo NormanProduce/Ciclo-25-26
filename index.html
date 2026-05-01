@@ -733,15 +733,83 @@
     body { background: var(--cream); }
   }
 
+  /* ── Index dark mode overrides ── */
+
+  /* Left panel — boost text contrast in dark mode */
+  html.dark .left-overlay {
+    background: linear-gradient(
+      135deg,
+      rgba(0,0,0,0.55) 0%,
+      rgba(10,25,8,0.38) 60%,
+      rgba(0,0,0,0.62) 100%
+    );
+  }
+  html.dark .left-hero h1        { color: #f1f5f9; text-shadow: 0 2px 12px rgba(0,0,0,0.7); }
+  html.dark .left-hero h1 em     { color: #a3e635; text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+  html.dark .left-hero .badge    { color: #a3e635; border-color: rgba(163,230,53,0.45); }
+  html.dark .left-hero p         { color: rgba(226,232,240,0.88); }
+  html.dark .left-footer         { color: rgba(226,232,240,0.55); }
+  html.dark .left-footer span    { color: rgba(163,230,53,0.6); }
+  html.dark .brand-tagline       { color: #a3e635; }
+  html.dark .brand-divider       { background: rgba(163,230,53,0.35); }
+
+  html.dark .right              { background: #181c27; }
+  html.dark .form-eyebrow       { color: #4aad75; }
+  html.dark .form-header h2     { color: #e2e8f0; }
+  html.dark .form-header p      { color: #94a3b8; }
+  html.dark .field label        { color: #94a3b8; }
+  html.dark .field input        { background: #1e2535; border-color: #2a3148; color: #e2e8f0; }
+  html.dark .field input::placeholder { color: #475569; }
+  html.dark .field input:focus  { border-color: #4aad75; box-shadow: 0 0 0 3px rgba(74,173,117,0.15); }
+  html.dark .forgot-link        { color: #4aad75; }
+  html.dark .toggle-pw          { color: #64748b; }
+  html.dark .remember-row label { color: #94a3b8; }
+  html.dark .btn-sso            { background: #1e2535; border-color: #2a3148; color: #94a3b8; }
+  html.dark .btn-sso:hover      { background: #263040; }
+  html.dark .form-footer        { color: #64748b; }
+  html.dark .form-footer a      { color: #4aad75; }
+  html.dark .divider            { color: #2a3148; }
+  html.dark .divider span       { background: #181c27; color: #475569; }
+  html.dark .social-link        { border-color: #2a3148; color: #64748b; background: #1e2535; }
+  html.dark .social-link:hover  { border-color: #4aad75; color: #4aad75; background: #0f2018; }
+  html.dark .address-block      { color: #475569; }
+  html.dark .cycle-selector h3  { color: #e2e8f0; }
+  html.dark .cycle-item         { background: #1e2535; border-color: #2a3148; color: #e2e8f0; }
+  html.dark .cycle-item:hover   { background: #263040; }
+  html.dark .cycle-label        { color: #4aad75; }
+  html.dark .menu h3            { color: #e2e8f0; }
+  html.dark #indexThemeBtn      { background: #1e2535; border-color: #2a3148; color: #e2e8f0; }
+  html.dark #indexThemeBtn:hover { background: #263040; }
+  html.dark .user-widget-btn    { background: #1e2535; border-color: #2a3148; }
+  html.dark .user-name          { color: #e2e8f0; }
+  html.dark .user-email         { color: #64748b; }
+  html.dark .user-dropdown      { background: #181c27; border-color: #2a3148; }
+  html.dark .user-menu-item     { color: #e2e8f0; }
+  html.dark .user-menu-item:hover { background: #1e2535; }
+  html.dark .user-menu-item svg { color: #64748b; }
+  html.dark .user-menu-item.danger { border-color: #2a3148; }
+
   /* ── User profile widget ── */
   .user-widget {
-    display: none;
     position: absolute;
     top: 20px;
     right: 20px;
-    width: 260px;
     z-index: 100;
+    display: none;
+    align-items: center;
+    gap: 8px;
   }
+
+  #indexThemeBtn {
+    display: flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px;
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 10px; cursor: pointer; color: var(--text-dark);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  #indexThemeBtn:hover { background: #e8e4da; border-color: var(--sand); }
 
   .user-widget-btn {
     width: 100%;
@@ -870,6 +938,9 @@
 
   <!-- User profile widget — visible when logged in -->
   <div class="user-widget" id="userWidget">
+    <button id="indexThemeBtn" type="button" title="Cambiar tema" onclick="toggleIndexTheme()">
+      <svg id="indexThemeIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
     <button class="user-widget-btn" onclick="toggleUserWidget()" type="button">
       <div class="user-avatar" id="userAvatar">CR</div>
       <div class="user-info">
@@ -956,6 +1027,16 @@
         <svg class="cycle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
     </div>
+    <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
+      <span class="cycle-label" style="display:block;margin-bottom:8px;font-size:11px;">MÓDULOS GLOBALES</span>
+      <a class="cycle-item" href="Insumos.html" style="text-decoration:none;display:flex;">
+        <span style="display:flex;align-items:center;gap:8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v4H3z"/><path d="M3 10h18v4H3z"/><path d="M3 17h18v4H3z"/></svg>
+          Insumos
+        </span>
+        <svg class="cycle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
   </div>
 
   <div class="menu" id="menu">
@@ -1031,7 +1112,28 @@
 </div>
 
 <script>
-  // Usuarios del sistema
+  // ── Tema (dark mode) ──────────────────────────────────
+  const SUN_SVG  = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+  const MOON_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+
+  (function applyIndexTheme() {
+    const dark = localStorage.getItem('np_theme') === 'dark';
+    document.documentElement.classList.toggle('dark', dark);
+    const icon = document.getElementById('indexThemeIcon');
+    if (icon) icon.outerHTML = dark ? SUN_SVG.replace('id="indexThemeIcon"','') : MOON_SVG.replace('id="indexThemeIcon"','');
+    const btn = document.getElementById('indexThemeBtn');
+    if (btn) btn.innerHTML = dark ? SUN_SVG : MOON_SVG;
+  })();
+
+  function toggleIndexTheme() {
+    const dark = !document.documentElement.classList.contains('dark');
+    localStorage.setItem('np_theme', dark ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', dark);
+    const btn = document.getElementById('indexThemeBtn');
+    if (btn) btn.innerHTML = dark ? SUN_SVG : MOON_SVG;
+  }
+
+  // ── Usuarios del sistema ──────────────────────────────
   const USERS_KEY = 'np_users';
   const defaultUsers = [
     { id:'u1', nombre:'Carlos Robles', email:'carlos.robles@mail.com', username:'admin', password:'Norman01', rol:'Administrador' }
@@ -1049,7 +1151,7 @@
     document.getElementById('userAvatar').textContent = initials;
     document.getElementById('userNameDisplay').textContent = user.nombre;
     document.getElementById('userEmailDisplay').textContent = user.email;
-    document.getElementById('userWidget').style.display = 'block';
+    document.getElementById('userWidget').style.display = 'flex';
   }
 
   function toggleUserWidget() {
@@ -1063,7 +1165,8 @@
 
   function menuAccion(accion) {
     document.getElementById('userWidget').classList.remove('open');
-    // Placeholder — aquí irán las páginas correspondientes
+    if (accion === 'perfil'   && window.npOpenProfileModal) { window.npOpenProfileModal(); return; }
+    if (accion === 'usuarios' && window.npOpenUsersModal)   { window.npOpenUsersModal();   return; }
     alert('Próximamente: ' + accion.charAt(0).toUpperCase() + accion.slice(1));
   }
 
@@ -1213,5 +1316,6 @@
     document.getElementById('cycleSelector').style.display = 'block';
   }
 </script>
+<script src="user-widget.js"></script>
 </body>
 </html>

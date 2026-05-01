@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insumos — Norman Produce</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary-green: #2d7a4f; --dark-green: #1a5c35; --light-green: #e8f5e9;
+  --accent: #4aad75; --text-dark: #1a1a2e; --text-light: #666;
+  --bg-color: #f4f6f8; --border-color: #e0e0e0; --card-bg: #fff;
+  --warn: #f59e0b; --danger: #c0392b; --info: #3b82f6;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Barlow', sans-serif; background: var(--bg-color); color: var(--text-dark); }
+a { text-decoration: none; }
+
+/* ── Header ── */
+header { background: #fff; border-bottom: 3px solid var(--primary-green); position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.header-container { display: flex; justify-content: space-between; align-items: center; padding: 14px 40px; }
+.header-left { display: flex; align-items: center; gap: 16px; }
+.btn-back { display: inline-flex; align-items: center; gap: 6px; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); background: #f4f6f8; border: 1px solid var(--border-color); border-radius: 6px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; }
+.btn-back:hover { background: var(--light-green); border-color: var(--accent); color: var(--dark-green); }
+.header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dark-green); }
+.header-right { display: flex; align-items: center; gap: 10px; }
+
+/* ── Tabs ── */
+.tabs-bar { background: #fff; border-bottom: 1px solid var(--border-color); padding: 0 40px; display: flex; gap: 0; }
+.tab-btn { padding: 14px 22px; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; margin-bottom: -1px; display: flex; align-items: center; gap: 8px; }
+.tab-btn:hover { color: var(--primary-green); }
+.tab-btn.active { color: var(--primary-green); border-bottom-color: var(--primary-green); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── Layout ── */
+.container { padding: 32px 40px; }
+.action-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.action-bar-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ── Summary cards ── */
+.cards-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+.sum-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px 24px; }
+.sum-card-label { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-light); margin-bottom: 6px; }
+.sum-card-value { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 700; color: var(--dark-green); line-height: 1; }
+.sum-card-sub { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+/* ── Buttons ── */
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; border: none; }
+.btn-primary { background: var(--primary-green); color: #fff; }
+.btn-primary:hover { background: var(--dark-green); }
+.btn-secondary { background: #fff; color: var(--text-dark); border: 1px solid var(--border-color); }
+.btn-secondary:hover { background: #f4f6f8; border-color: #bbb; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-icon { width: 30px; height: 30px; padding: 0; justify-content: center; border: 1px solid var(--border-color); background: #fff; border-radius: 6px; color: var(--text-light); }
+.btn-icon:hover { border-color: var(--accent); color: var(--accent); }
+.btn-danger { background: #fff5f5; color: var(--danger); border: 1px solid #fecaca; }
+.btn-danger:hover { background: #fee2e2; }
+.btn-ai { background: linear-gradient(135deg, #6d28d9, #4f46e5); color: #fff; }
+.btn-ai:hover { background: linear-gradient(135deg, #5b21b6, #4338ca); }
+.btn-ai:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Table ── */
+.table-wrapper { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05); overflow-x: auto; }
+.table-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border-color); background: #fafafa; }
+.table-title { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 11px 16px; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); border-bottom: 2px solid var(--border-color); white-space: nowrap; }
+td { padding: 13px 16px; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #fafff8; }
+.td-empty { text-align: center; padding: 48px 20px; color: var(--text-light); }
+.td-empty i { font-size: 32px; color: #d0d0d0; display: block; margin-bottom: 10px; }
+
+/* ── Badges ── */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.badge-green { background: #d1fae5; color: #065f46; }
+.badge-orange { background: #fef3c7; color: #92400e; }
+.badge-blue { background: #dbeafe; color: #1e40af; }
+.badge-gray { background: #f1f5f9; color: #64748b; }
+.badge-purple { background: #ede9fe; color: #5b21b6; }
+
+/* ── Recipe grid ── */
+.recipe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+.recipe-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+.recipe-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+.recipe-img { width: 100%; height: 160px; object-fit: cover; background: #e8f5e9; display: flex; align-items: center; justify-content: center; color: #bbb; font-size: 40px; }
+.recipe-img img { width: 100%; height: 100%; object-fit: cover; }
+.recipe-info { padding: 14px 16px; }
+.recipe-name { font-weight: 600; font-size: 14px; color: var(--text-dark); margin-bottom: 4px; }
+.recipe-cultivo { font-size: 12px; color: var(--text-light); }
+.recipe-add { border: 2px dashed var(--border-color); background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 220px; color: #bbb; gap: 10px; transition: all 0.2s; }
+.recipe-add:hover { border-color: var(--accent); color: var(--accent); background: #f0faf4; }
+
+/* ── Upload zone ── */
+.upload-zone { border: 2px dashed #c8e6c9; border-radius: 12px; padding: 32px; text-align: center; cursor: pointer; transition: all 0.2s; background: #fafff8; }
+.upload-zone:hover, .upload-zone.drag-over { border-color: var(--accent); background: #f0faf4; }
+.upload-zone i { font-size: 28px; color: var(--accent); margin-bottom: 8px; display: block; }
+.upload-zone p { font-size: 13px; color: var(--text-light); margin: 0; }
+.upload-zone strong { color: var(--primary-green); }
+
+/* ── Invoice preview ── */
+.invoice-list { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+.invoice-item { border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; }
+.invoice-item-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #f9f9f9; border-bottom: 1px solid var(--border-color); gap: 10px; }
+.invoice-thumb { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; flex-shrink: 0; background: #e8f5e9; display: flex; align-items: center; justify-content: center; color: var(--primary-green); }
+.invoice-thumb img { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; }
+.invoice-name { font-size: 13px; font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.invoice-status { font-size: 11px; }
+.invoice-products { padding: 12px 14px; }
+.ai-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Product rows in modal ── */
+.prod-row { display: grid; grid-template-columns: 1fr 90px 80px 100px 90px 32px; gap: 6px; align-items: center; margin-bottom: 6px; }
+.prod-row input, .prod-row select { padding: 7px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; font-family: 'Barlow', sans-serif; width: 100%; outline: none; }
+.prod-row input:focus, .prod-row select:focus { border-color: var(--accent); }
+.prod-row-head { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); padding-bottom: 4px; border-bottom: 1px solid var(--border-color); margin-bottom: 8px; display: grid; grid-template-columns: 1fr 90px 80px 100px 90px 32px; gap: 6px; }
+
+/* ── Modal ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; z-index: 9000; padding: 20px; }
+.modal-card { background: #fff; border-radius: 16px; width: 720px; max-width: 100%; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 24px 60px rgba(0,0,0,0.2); overflow: hidden; }
+.modal-card.sm { width: 440px; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 26px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
+.modal-header h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dark-green); }
+.modal-body { flex: 1; overflow-y: auto; padding: 24px 26px; }
+.modal-footer { padding: 16px 26px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; }
+.btn-close { width: 30px; height: 30px; background: none; border: none; cursor: pointer; color: var(--text-light); border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.btn-close:hover { background: #f0f0f0; color: var(--text-dark); }
+
+/* ── Form fields ── */
+.field-group { margin-bottom: 16px; }
+.field-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-light); margin-bottom: 5px; }
+.field-group input, .field-group select, .field-group textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: 'Barlow', sans-serif; color: var(--text-dark); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+.field-group input:focus, .field-group select:focus, .field-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(74,173,117,0.12); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.section-sep { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); border-bottom: 1px solid var(--border-color); padding-bottom: 6px; margin: 20px 0 14px; }
+
+/* ── Existencias progress ── */
+.stock-bar { height: 6px; background: #e8f5e9; border-radius: 3px; margin-top: 6px; }
+.stock-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+.stock-bar-fill.low { background: var(--warn); }
+.stock-bar-fill.empty { background: var(--danger); }
+
+/* ── Application method icon ── */
+.method-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; }
+
+/* ── Dark mode ── */
+html.dark body          { background: #0f1117; color: #e2e8f0; }
+html.dark header        { background: #141820; border-color: #2d7a4f; }
+html.dark .tabs-bar     { background: #141820; border-color: #2a3148; }
+html.dark .tab-btn      { color: #64748b; }
+html.dark .tab-btn.active { color: #4aad75; border-color: #4aad75; }
+html.dark .sum-card     { background: #181c27; border-color: #2a3148; }
+html.dark .sum-card-label { color: #64748b; }
+html.dark .table-wrapper { background: #181c27; border-color: #2a3148; }
+html.dark .table-header { background: #1e2535; border-color: #2a3148; }
+html.dark th            { color: #64748b; border-color: #2a3148; }
+html.dark td            { border-color: #1e2535; color: #e2e8f0; }
+html.dark tbody tr:hover { background: #1e2535; }
+html.dark .btn-secondary { background: #1e2535; color: #e2e8f0; border-color: #2a3148; }
+html.dark .btn-icon     { background: #1e2535; border-color: #2a3148; color: #94a3b8; }
+html.dark .recipe-card  { background: #181c27; border-color: #2a3148; }
+html.dark .recipe-add   { border-color: #2a3148; }
+html.dark .upload-zone  { background: #0f2018; border-color: #2d7a4f; }
+html.dark .invoice-item { border-color: #2a3148; }
+html.dark .invoice-item-header { background: #1e2535; border-color: #2a3148; }
+html.dark .invoice-item .invoice-proveedor-row { background: #181c27; border-color: #2a3148; }
+html.dark .invoice-item .invoice-proveedor-row input { color: #e2e8f0; }
+html.dark .modal-card   { background: #181c27; color: #e2e8f0; }
+html.dark .modal-header { border-color: #2a3148; }
+html.dark .modal-footer { border-color: #2a3148; }
+html.dark .field-group input, html.dark .field-group select, html.dark .field-group textarea { background: #1e2535; border-color: #2a3148; color: #e2e8f0; }
+html.dark .prod-row input, html.dark .prod-row select { background: #1e2535; border-color: #2a3148; color: #e2e8f0; }
+html.dark .prod-row-head { border-color: #2a3148; color: #64748b; }
+html.dark .btn-close:hover { background: #1e2535; }
+html.dark .btn-danger   { background: #2a1515; border-color: #7f1d1d; }
+html.dark .stock-bar    { background: #1e2535; }
+html.dark .invoice-products { background: #181c27; }
+
+@media (max-width: 768px) {
+  .header-container, .container { padding: 14px 20px; }
+  .tabs-bar { padding: 0 20px; overflow-x: auto; }
+  .form-row { grid-template-columns: 1fr; }
+  .prod-row { grid-template-columns: 1fr 70px 60px 80px 70px 30px; }
+  .cards-row { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="header-left">
+      <a href="index.html" class="btn-back">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Ciclos
+      </a>
+      <img src="Imagenes/norman_logo.png" alt="Norman Produce" style="height:42px;object-fit:contain;filter:brightness(0);">
+      <span class="header-title"><i class="fas fa-flask" style="color:var(--primary-green);font-size:16px;"></i> Control de Insumos</span>
+    </div>
+    <div class="header-right" id="headerRight"></div>
+  </div>
+</header>
+
+<!-- Tabs -->
+<div class="tabs-bar">
+  <button class="tab-btn active" data-tab="dashboard"><i class="fas fa-chart-line"></i> Dashboard</button>
+  <button class="tab-btn" data-tab="compras"><i class="fas fa-file-invoice"></i> Compras</button>
+  <button class="tab-btn" data-tab="catalogo"><i class="fas fa-boxes"></i> Catálogo</button>
+  <button class="tab-btn" data-tab="recetas"><i class="fas fa-prescription-bottle-alt"></i> Recetas</button>
+  <button class="tab-btn" data-tab="aplicaciones"><i class="fas fa-spray-can"></i> Aplicaciones</button>
+</div>
+
+<!-- ══════════════════ TAB: DASHBOARD ══════════════════ -->
+<div class="tab-content active" id="tabDashboard">
+  <div class="container">
+
+    <!-- KPI row -->
+    <div class="cards-row" id="dashKpis" style="margin-bottom:28px;"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;">
+
+      <!-- Inventario -->
+      <div class="table-wrapper">
+        <div class="table-header">
+          <span class="table-title"><i class="fas fa-boxes" style="color:var(--primary-green);margin-right:6px;"></i>Inventario actual</span>
+        </div>
+        <div id="dashInventario" style="padding:0 0 8px;"></div>
+      </div>
+
+      <!-- Gasto por aplicación -->
+      <div class="table-wrapper">
+        <div class="table-header">
+          <span class="table-title"><i class="fas fa-spray-can" style="color:var(--primary-green);margin-right:6px;"></i>Gasto por aplicación</span>
+        </div>
+        <table>
+          <thead><tr><th>Fecha</th><th>Campo</th><th>Método</th><th>Costo estimado</th></tr></thead>
+          <tbody id="dashGastoAplic"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Aplicaciones recientes -->
+    <div class="table-wrapper">
+      <div class="table-header">
+        <span class="table-title"><i class="fas fa-history" style="color:var(--primary-green);margin-right:6px;"></i>Aplicaciones recientes</span>
+      </div>
+      <table>
+        <thead><tr><th>Fecha</th><th>Campo / Cultivo</th><th>Receta</th><th>Método</th><th>Productos usados</th><th>Costo estimado</th></tr></thead>
+        <tbody id="dashAplicaciones"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════ TAB: COMPRAS ══════════════════ -->
+<div class="tab-content" id="tabCompras">
+  <div class="container">
+    <div class="cards-row" id="cardsCompras"></div>
+    <div class="action-bar">
+      <div class="action-bar-left">
+        <button class="btn btn-primary" onclick="openCompraModal()">
+          <i class="fas fa-plus"></i> Nueva Compra
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="openApiKeyModal()" id="btnApiKey">
+          <i class="fas fa-key"></i> API Key IA
+        </button>
+      </div>
+      <div style="font-size:12px;color:var(--text-light);">
+        <i class="fas fa-circle" id="apiKeyStatus" style="font-size:8px;color:#d0d0d0;margin-right:4px;"></i>
+        <span id="apiKeyLabel">Sin API Key configurada</span>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <div class="table-header">
+        <span class="table-title">Historial de Compras</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th><th>Proveedor</th><th>Facturas</th>
+            <th>Productos</th><th>Total</th><th>Receta</th><th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyCompras"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ TAB: CATÁLOGO ══════════════════ -->
+<div class="tab-content" id="tabCatalogo">
+  <div class="container">
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="openProductoModal(null)"><i class="fas fa-plus"></i> Agregar Producto</button>
+      <select class="btn btn-secondary btn-sm" id="filtroTipo" onchange="renderCatalogo()" style="min-width:150px;">
+        <option value="">Todos los tipos</option>
+        <option>Fertilizante</option><option>Herbicida</option>
+        <option>Insecticida</option><option>Fungicida</option><option>Otro</option>
+      </select>
+    </div>
+    <div class="table-wrapper">
+      <div class="table-header"><span class="table-title">Inventario de Productos</span></div>
+      <table>
+        <thead>
+          <tr><th>Producto</th><th>Tipo</th><th>Unidad</th><th>Entradas</th><th>Salidas</th><th>Existencia</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="tbodyCatalogo"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ TAB: RECETAS ══════════════════ -->
+<div class="tab-content" id="tabRecetas">
+  <div class="container">
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="openRecetaModal(null)"><i class="fas fa-plus"></i> Nueva Receta</button>
+    </div>
+    <div class="recipe-grid" id="recipeGrid"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ TAB: APLICACIONES ══════════════════ -->
+<div class="tab-content" id="tabAplicaciones">
+  <div class="container">
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="openAplicacionModal(null)"><i class="fas fa-plus"></i> Registrar Aplicación</button>
+    </div>
+    <div class="table-wrapper">
+      <div class="table-header"><span class="table-title">Registro de Aplicaciones</span></div>
+      <table>
+        <thead>
+          <tr><th>Fecha</th><th>Campo / Cultivo</th><th>Receta</th><th>Método</th><th>Productos usados</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="tbodyAplicaciones"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ MODAL: COMPRA ══════════════════ -->
+<div class="modal-overlay" id="modalCompra" style="display:none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="modalCompraTitle">Nueva Compra</h3>
+      <button class="btn-close" onclick="closeModal('modalCompra')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="field-group"><label>Fecha *</label><input type="date" id="cFecha"></div>
+        <div class="field-group"><label>Proveedor(es)</label><input type="text" id="cProveedor" placeholder="Se llena automáticamente al reconocer facturas" readonly style="background:#f3f4f6;cursor:default;"></div>
+      </div>
+      <div class="form-row">
+        <div class="field-group">
+          <label>Receta vinculada</label>
+          <select id="cReceta"><option value="">— Sin receta —</option></select>
+        </div>
+        <div class="field-group"><label>Notas</label><input type="text" id="cNotas" placeholder="Observaciones opcionales"></div>
+      </div>
+
+      <div class="section-sep"><i class="fas fa-file-image"></i> Facturas</div>
+
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p><strong>Sube las fotos o PDF de las facturas</strong></p>
+        <p>Haz clic o arrastra archivos aquí · JPG, PNG, WEBP, PDF, <strong>XML (CFDI)</strong></p>
+        <input type="file" id="fileInput" multiple accept="image/*,.pdf,.xml,text/xml,application/xml" style="display:none" onchange="onFileSelect(event)">
+      </div>
+      <div class="invoice-list" id="invoiceList"></div>
+
+      <div class="section-sep"><i class="fas fa-list"></i> Productos de esta compra</div>
+      <div class="prod-row-head">
+        <span>Producto</span><span>Cantidad</span><span>Unidad</span><span>Precio Unit.</span><span>Total</span><span></span>
+      </div>
+      <div id="prodRows"></div>
+      <button class="btn btn-secondary btn-sm" onclick="addProdRow()" style="margin-top:8px;">
+        <i class="fas fa-plus"></i> Agregar producto manualmente
+      </button>
+    </div>
+    <div class="modal-footer">
+      <div style="flex:1;font-size:13px;color:var(--text-light);">
+        Total: <strong id="cTotal" style="color:var(--dark-green);font-size:16px;">$0</strong>
+      </div>
+      <button class="btn btn-secondary" onclick="closeModal('modalCompra')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveCompra()"><i class="fas fa-save"></i> Guardar compra</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ MODAL: API KEY ══════════════════ -->
+<div class="modal-overlay" id="modalApiKey" style="display:none;">
+  <div class="modal-card sm">
+    <div class="modal-header">
+      <h3>Configurar API Key</h3>
+      <button class="btn-close" onclick="closeModal('modalApiKey')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;">
+        La API Key de Google Gemini permite reconocer automáticamente los productos en fotos de facturas. Es gratuita en <strong>aistudio.google.com</strong>. Se guarda solo en este dispositivo.
+      </p>
+      <div class="field-group">
+        <label>API Key de Google Gemini</label>
+        <input type="password" id="inputApiKey" placeholder="AIza..." autocomplete="off">
+      </div>
+      <p style="font-size:11px;color:#94a3b8;margin-top:8px;">
+        <i class="fas fa-lock"></i> Se almacena localmente en tu navegador. Nunca se envía a nuestros servidores.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="clearApiKey()"><i class="fas fa-trash"></i> Limpiar</button>
+      <button class="btn btn-primary" onclick="saveApiKey()"><i class="fas fa-check"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ MODAL: RECETA ══════════════════ -->
+<div class="modal-overlay" id="modalReceta" style="display:none;">
+  <div class="modal-card sm">
+    <div class="modal-header">
+      <h3 id="modalRecetaTitle">Nueva Receta</h3>
+      <button class="btn-close" onclick="closeModal('modalReceta')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group"><label>Nombre de la receta *</label><input type="text" id="rNombre" placeholder="Ej: Fórmula arranque Papa"></div>
+      <div class="form-row">
+        <div class="field-group"><label>Cultivo</label><input type="text" id="rCultivo" placeholder="Papa, Cebolla…"></div>
+        <div class="field-group"><label>Fecha</label><input type="date" id="rFecha"></div>
+      </div>
+      <div class="field-group"><label>Notas del ingeniero</label><textarea id="rNotas" rows="2" placeholder="Indicaciones adicionales…"></textarea></div>
+      <div class="field-group">
+        <label>Foto de la receta</label>
+        <div class="upload-zone" style="padding:20px;" onclick="document.getElementById('rFotoInput').click()">
+          <i class="fas fa-camera"></i>
+          <p><strong>Subir foto de la receta</strong></p>
+          <input type="file" id="rFotoInput" accept="image/*" style="display:none" onchange="previewRecetaFoto(event)">
+        </div>
+        <img id="rFotoPreview" style="display:none;width:100%;margin-top:10px;border-radius:8px;max-height:200px;object-fit:contain;border:1px solid var(--border-color);">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalReceta')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveReceta()"><i class="fas fa-save"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ MODAL: APLICACIÓN ══════════════════ -->
+<div class="modal-overlay" id="modalAplicacion" style="display:none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="modalAplTitle">Nueva Aplicación</h3>
+      <button class="btn-close" onclick="closeModal('modalAplicacion')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="field-group"><label>Fecha *</label><input type="date" id="aFecha"></div>
+        <div class="field-group"><label>Campo / Cultivo *</label><input type="text" id="aCultivo" placeholder="Papa Norte, Cebolla Sur…"></div>
+      </div>
+      <div class="form-row">
+        <div class="field-group">
+          <label>Receta aplicada</label>
+          <select id="aReceta"><option value="">— Sin receta —</option></select>
+        </div>
+        <div class="field-group">
+          <label>Método de aplicación *</label>
+          <select id="aMetodo" onchange="toggleRemision()">
+            <option value="Manual">Manual / Tractor</option>
+            <option value="Aspersión">Aspersión</option>
+            <option value="Avioneta">Avioneta / Drone</option>
+            <option value="Fertirrigación">Fertirrigación</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group" id="remisionField" style="display:none;">
+        <label>Remisión de vuelo <span style="font-size:11px;color:var(--text-light);">(requerida para avioneta/drone)</span></label>
+        <div class="upload-zone" style="padding:16px;" onclick="document.getElementById('remisionInput').click()">
+          <i class="fas fa-file-upload"></i>
+          <p><strong>Subir remisión</strong> · Imagen o PDF</p>
+          <input type="file" id="remisionInput" accept="image/*,.pdf" style="display:none" onchange="previewRemision(event)">
+        </div>
+        <div id="remisionPreview" style="margin-top:8px;font-size:13px;color:var(--primary-green);"></div>
+      </div>
+      <div class="section-sep"><i class="fas fa-flask"></i> Productos aplicados</div>
+      <div class="prod-row-head" style="grid-template-columns:1fr 90px 80px 32px;">
+        <span>Producto</span><span>Cantidad usada</span><span>Unidad</span><span></span>
+      </div>
+      <div id="aplProdRows"></div>
+      <button class="btn btn-secondary btn-sm" onclick="addAplProdRow()" style="margin-top:8px;">
+        <i class="fas fa-plus"></i> Agregar producto
+      </button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalAplicacion')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveAplicacion()"><i class="fas fa-save"></i> Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ MODAL: VER RECETA ══════════════════ -->
+<div class="modal-overlay" id="modalVerReceta" style="display:none;">
+  <div class="modal-card sm">
+    <div class="modal-header">
+      <h3 id="vrNombre">Receta</h3>
+      <button class="btn-close" onclick="closeModal('modalVerReceta')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="vrBody"></div>
+    <div class="modal-footer" id="vrFooter"></div>
+  </div>
+</div>
+
+<script>
+if (!sessionStorage.getItem('np_logged')) location.replace('index.html');
+
+/* ─── Data ─────────────────────────────────────────── */
+const LS = 'np_insumos';
+const API_KEY_LS = 'np_anthropic_key';
+const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
+const fmtMXN = n => '$' + Number(n||0).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2});
+const fmtDate = d => d ? new Date(d+'T00:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+
+let data = { productos:[], recetas:[], compras:[], aplicaciones:[] };
+let editingCompraId = null;
+let editingRecetaId = null;
+let editingAplicId  = null;
+let invoices = []; // [{id, file, name, thumb, status, productos}]
+let remisionData = null;
+let rFotoData = null;
+
+function syncProductosFromCompras() {
+  data.compras.forEach(compra => {
+    (compra.items || []).forEach(item => {
+      if (!item.nombre) return;
+      const existe = data.productos.find(p => p.nombre.toLowerCase() === item.nombre.toLowerCase());
+      if (!existe) {
+        data.productos.push({ id: uid(), nombre: item.nombre, tipo: 'Otro', unidad: item.unidad || 'L' });
+      }
+    });
+  });
+}
+
+function migrateData() {
+  data.compras.forEach(compra => {
+    (compra.items || []).forEach(item => {
+      // Fix missing total using precio × cantidad
+      if ((!item.total || item.total === 0) && item.precio > 0 && item.cantidad > 0)
+        item.total = item.precio * item.cantidad;
+      // Fix missing precio using total / cantidad
+      if ((!item.precio || item.precio === 0) && item.total > 0 && item.cantidad > 0)
+        item.precio = item.total / item.cantidad;
+    });
+    // Recalculate compra.total from items
+    if (compra.items?.length)
+      compra.total = compra.items.reduce((s,i) => s + (i.total || 0), 0);
+  });
+  save();
+}
+
+function load() {
+  try { data = JSON.parse(localStorage.getItem(LS)) || data; } catch {}
+  migrateData();
+  syncProductosFromCompras();
+  refreshAll();
+}
+function save() { localStorage.setItem(LS, JSON.stringify(data)); }
+
+function refreshAll() {
+  renderDashboard();
+  renderCardsCompras();
+  renderCompras();
+  renderCatalogo();
+  renderRecetas();
+  renderAplicaciones();
+  refreshApiKeyStatus();
+}
+
+/* ─── FIFO cost calculation ─────────────────────────── */
+function calcCostoFIFO(nombreProd, cantidadUsada, aplId) {
+  const norm = s => s.toLowerCase().trim();
+  // All purchase lots sorted oldest first
+  const lotes = data.compras
+    .slice().sort((a,b) => a.fecha.localeCompare(b.fecha))
+    .flatMap(c => (c.items||[])
+      .filter(i => norm(i.nombre) === norm(nombreProd))
+      .map(i => {
+        const cant = i.cantidad || 0;
+        const precioEfectivo = cant > 0 && i.total > 0 ? i.total / cant : (i.precio || 0);
+        return { cantidad: cant, precio: precioEfectivo };
+      })
+    );
+
+  // Index of current application in the array (used as tiebreaker for same-date)
+  const aplIdx = data.aplicaciones.findIndex(a => a.id === aplId);
+
+  // Total consumed by applications that come BEFORE this one
+  // (earlier date, or same date but registered before in the array)
+  const yaConsumido = data.aplicaciones
+    .filter((a, idx) => {
+      if (a.id === aplId) return false;
+      const mismaFecha = a.fecha === data.aplicaciones[aplIdx]?.fecha;
+      if (mismaFecha) return idx < aplIdx;
+      return a.fecha < data.aplicaciones[aplIdx]?.fecha;
+    })
+    .flatMap(a => (a.items||[])
+      .filter(i => norm(i.nombre||'') === norm(nombreProd))
+      .map(i => i.cantidad || 0)
+    ).reduce((s,q) => s + q, 0);
+
+  // FIFO: skip already consumed, price remaining
+  let toSkip    = yaConsumido;
+  let toConsume = cantidadUsada;
+  let costo     = 0;
+  for (const lote of lotes) {
+    if (toSkip >= lote.cantidad) { toSkip -= lote.cantidad; continue; }
+    const disponible = lote.cantidad - toSkip;
+    toSkip = 0;
+    const tomar = Math.min(disponible, toConsume);
+    costo += tomar * lote.precio;
+    toConsume -= tomar;
+    if (toConsume <= 0) break;
+  }
+  return costo;
+}
+
+function calcCostoAplicacion(apl) {
+  return (apl.items||[]).reduce((s,item) =>
+    s + calcCostoFIFO(item.nombre, item.cantidad||0, apl.id), 0);
+}
+
+/* ─── Product conflict detection ───────────────────── */
+function normNombre(s) { return s.toLowerCase().trim().replace(/\s+/g,' '); }
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length:m+1}, (_,i) =>
+    Array.from({length:n+1}, (_,j) => i===0?j:j===0?i:0));
+  for (let i=1;i<=m;i++)
+    for (let j=1;j<=n;j++)
+      dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function findSimilar(nombre) {
+  const na = normNombre(nombre);
+  return data.productos.find(p => {
+    const nb = normNombre(p.nombre);
+    if (nb === na) return true;
+    if (nb.includes(na) || na.includes(nb)) return true;
+    return levenshtein(na, nb) <= Math.max(2, Math.floor(Math.max(na.length,nb.length)*0.2));
+  });
+}
+
+let _pendingCompra = null;
+let _pendingItems  = null;
+let _pendingConflicts = [];
+
+function saveCompra() {
+  const fecha = document.getElementById('cFecha').value;
+  if (!fecha) { alert('La fecha es requerida.'); return; }
+
+  const items = getProdRows();
+  if (!items.length) { alert('Agrega al menos un producto.'); return; }
+
+  const proveedores = [...new Set(invoices.map(i => i.proveedor).filter(Boolean))];
+  const proveedor = proveedores.join(' / ') || document.getElementById('cProveedor').value.trim() || 'Sin proveedor';
+  const total = items.reduce((s,i) => s + i.total, 0);
+  const compra = {
+    id: editingCompraId || uid(),
+    fecha, proveedor, notas: document.getElementById('cNotas').value,
+    recetaId: document.getElementById('cReceta').value,
+    facturas: invoices.map(i => ({ id:i.id, name:i.name, proveedor:i.proveedor||'' })),
+    items, total
+  };
+
+  // Detect name conflicts against existing catalog
+  const conflicts = [];
+  items.forEach((item, idx) => {
+    const similar = findSimilar(item.nombre);
+    if (similar && normNombre(similar.nombre) !== normNombre(item.nombre)) {
+      conflicts.push({ idx, newName: item.nombre, existingName: similar.nombre });
+    }
+  });
+
+  if (conflicts.length) {
+    _pendingCompra   = compra;
+    _pendingItems    = items;
+    _pendingConflicts = conflicts;
+    document.getElementById('conflictList').innerHTML = conflicts.map((c,i) => `
+      <div style="border:1px solid var(--border-color);border-radius:8px;padding:12px;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+          <span class="badge badge-orange">${c.newName}</span>
+          <span style="color:#64748b;font-size:12px;">parece coincidir con</span>
+          <span class="badge badge-green">${c.existingName}</span>
+        </div>
+        <div style="display:flex;gap:16px;font-size:13px;">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+            <input type="radio" name="cf_${i}" value="existing" checked>
+            Usar <strong style="margin-left:3px;">"${c.existingName}"</strong>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+            <input type="radio" name="cf_${i}" value="new">
+            Mantener <strong style="margin-left:3px;">"${c.newName}"</strong>
+          </label>
+        </div>
+      </div>`).join('');
+    document.getElementById('modalConflictos').style.display = 'flex';
+    return;
+  }
+
+  finalizeCompra(compra, items);
+}
+
+function resolveConflicts() {
+  _pendingConflicts.forEach((c,i) => {
+    if (document.querySelector(`input[name="cf_${i}"]:checked`)?.value === 'existing')
+      _pendingItems[c.idx].nombre = c.existingName;
+  });
+  _pendingCompra.items = _pendingItems;
+  _pendingCompra.total = _pendingItems.reduce((s,i) => s + i.total, 0);
+  closeModal('modalConflictos');
+  finalizeCompra(_pendingCompra, _pendingItems);
+}
+
+function finalizeCompra(compra, items) {
+  if (editingCompraId) {
+    data.compras = data.compras.map(c => c.id === editingCompraId ? compra : c);
+  } else {
+    data.compras.unshift(compra);
+  }
+  syncProductosFromCompras();
+  save(); refreshAll(); closeModal('modalCompra');
+}
+
+function renderDashboard() {
+  const totalGastado   = data.compras.reduce((s,c) => s + (c.total||0), 0);
+  const totalAplicaciones = data.aplicaciones.length;
+  const totalProductos = data.productos.length;
+  const costoAplicado  = data.aplicaciones.reduce((s,a) => s + calcCostoAplicacion(a), 0);
+
+  document.getElementById('dashKpis').innerHTML = `
+    <div class="sum-card"><div class="sum-card-label">Total Comprado</div><div class="sum-card-value">${fmtMXN(totalGastado)}</div><div class="sum-card-sub">en insumos</div></div>
+    <div class="sum-card"><div class="sum-card-label">Costo Aplicado</div><div class="sum-card-value">${fmtMXN(costoAplicado)}</div><div class="sum-card-sub">estimado</div></div>
+    <div class="sum-card"><div class="sum-card-label">Aplicaciones</div><div class="sum-card-value">${totalAplicaciones}</div><div class="sum-card-sub">registradas</div></div>
+    <div class="sum-card"><div class="sum-card-label">Productos</div><div class="sum-card-value">${totalProductos}</div><div class="sum-card-sub">en catálogo</div></div>`;
+
+  // Inventario
+  const inv = document.getElementById('dashInventario');
+  if (!data.productos.length) {
+    inv.innerHTML = '<p style="padding:16px;color:var(--text-light);font-size:13px;">Sin productos registrados.</p>';
+  } else {
+    const rows = data.productos.map(p => {
+      const { entradas, salidas, existencia } = getExistencia(p.id, p.nombre);
+      const pct = entradas ? Math.min(1, Math.max(0, existencia / entradas)) : 0;
+      const barClass = pct < 0.15 ? 'empty' : pct < 0.3 ? 'low' : '';
+      const color = pct < 0.15 ? '#ef4444' : pct < 0.3 ? '#f59e0b' : 'var(--primary-green)';
+      return `
+        <div style="padding:10px 16px;border-bottom:1px solid var(--border-color);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:600;">${p.nombre}</span>
+            <span style="font-size:12px;color:${color};font-weight:700;">${existencia.toLocaleString('es-MX',{maximumFractionDigits:1})} ${p.unidad}</span>
+          </div>
+          <div class="stock-bar"><div class="stock-bar-fill ${barClass}" style="width:${(pct*100).toFixed(0)}%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-light);margin-top:3px;">
+            <span>Entradas: ${entradas.toLocaleString('es-MX',{maximumFractionDigits:1})}</span>
+            <span>Salidas: ${salidas.toLocaleString('es-MX',{maximumFractionDigits:1})}</span>
+          </div>
+        </div>`;
+    }).join('');
+    inv.innerHTML = rows || '<p style="padding:16px;color:var(--text-light);font-size:13px;">Sin movimientos.</p>';
+  }
+
+  // Gasto por aplicación
+  const METODO_COLOR = { Manual:'#6d28d9', Aspersión:'#0ea5e9', Avioneta:'#f59e0b', Fertirrigación:'#10b981' };
+  const gastoRows = data.aplicaciones.slice(0, 10).map(a => {
+    const costo = calcCostoAplicacion(a);
+    const color = METODO_COLOR[a.metodo] || '#64748b';
+    return `<tr>
+      <td>${fmtDate(a.fecha)}</td>
+      <td>${a.cultivo}</td>
+      <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color};margin-right:5px;"></span>${a.metodo}</td>
+      <td style="font-weight:700;color:var(--dark-green);">${costo > 0 ? fmtMXN(costo) : '—'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('dashGastoAplic').innerHTML = gastoRows ||
+    `<tr><td colspan="4" class="td-empty">Sin aplicaciones registradas</td></tr>`;
+
+  // Aplicaciones recientes
+  const aplRows = data.aplicaciones.slice(0, 8).map(a => {
+    const receta = data.recetas.find(r => r.id === a.recetaId);
+    const costo  = calcCostoAplicacion(a);
+    const METODO_ICON = { Manual:'fa-hands', Aspersión:'fa-shower', Avioneta:'fa-plane', Fertirrigación:'fa-tint' };
+    return `<tr>
+      <td>${fmtDate(a.fecha)}</td>
+      <td><strong>${a.cultivo}</strong></td>
+      <td>${receta ? `<span class="badge badge-green">${receta.nombre}</span>` : '—'}</td>
+      <td><i class="fas ${METODO_ICON[a.metodo]||'fa-spray-can'}" style="margin-right:5px;color:#64748b;"></i>${a.metodo}</td>
+      <td style="font-size:12px;">${(a.items||[]).map(i=>`${i.nombre} (${i.cantidad} ${i.unidad})`).join(', ') || '—'}</td>
+      <td style="font-weight:700;color:var(--dark-green);">${costo > 0 ? fmtMXN(costo) : '—'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('dashAplicaciones').innerHTML = aplRows ||
+    `<tr><td colspan="6" class="td-empty"><i class="fas fa-spray-can"></i> Sin aplicaciones registradas</td></tr>`;
+}
+
+/* ─── Tabs ─────────────────────────────────────────── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab' + cap(btn.dataset.tab)).classList.add('active');
+  });
+});
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+/* ─── API Key ───────────────────────────────────────── */
+function refreshApiKeyStatus() {
+  const key = localStorage.getItem(API_KEY_LS);
+  const dot   = document.getElementById('apiKeyStatus');
+  const label = document.getElementById('apiKeyLabel');
+  if (key) { dot.style.color = '#4ade80'; label.textContent = 'Gemini listo para reconocer facturas'; }
+  else      { dot.style.color = '#d0d0d0'; label.textContent = 'Sin API Key de Gemini configurada'; }
+}
+function openApiKeyModal() {
+  document.getElementById('inputApiKey').value = localStorage.getItem(API_KEY_LS) || '';
+  document.getElementById('modalApiKey').style.display = 'flex';
+}
+function saveApiKey() {
+  const val = document.getElementById('inputApiKey').value.trim();
+  if (val) localStorage.setItem(API_KEY_LS, val);
+  closeModal('modalApiKey');
+  refreshApiKeyStatus();
+}
+function clearApiKey() {
+  localStorage.removeItem(API_KEY_LS);
+  document.getElementById('inputApiKey').value = '';
+  refreshApiKeyStatus();
+  closeModal('modalApiKey');
+}
+
+/* ─── Invoice recognition ───────────────────────────── */
+async function recognizeInvoice(inv) {
+  const apiKey = localStorage.getItem(API_KEY_LS);
+  if (!apiKey) { alert('Configura primero tu API Key de Google Gemini para usar el reconocimiento automático.'); openApiKeyModal(); return; }
+
+  inv.status = 'loading';
+  inv.error = null;
+  renderInvoiceList();
+
+  try {
+    const mimeType = inv.mediaType === 'application/pdf' ? 'application/pdf' : inv.mediaType;
+
+    const body = {
+      contents: [{
+        parts: [
+          { inline_data: { mime_type: mimeType, data: inv.b64 } },
+          { text: PROMPT_FACTURA }
+        ]
+      }],
+      generationConfig: { temperature: 0, maxOutputTokens: 2000 }
+    };
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }
+    );
+
+    const respJson = await res.json();
+
+    if (res.status === 429) {
+      inv.error = 'Límite de solicitudes alcanzado. Reintentando en 30 s…';
+      renderInvoiceList();
+      await new Promise(r => setTimeout(r, 30000));
+      return recognizeInvoice(inv);
+    }
+    if (!res.ok) {
+      const msg = respJson?.error?.message || `HTTP ${res.status}`;
+      throw new Error(msg);
+    }
+
+    // gemini-2.5-flash has thinking — join all non-thought text parts
+    const parts = respJson.candidates?.[0]?.content?.parts || [];
+    const text = parts
+      .filter(pt => !pt.thought && pt.text)
+      .map(pt => pt.text)
+      .join('') || parts.map(pt => pt.text||'').join('');
+
+    if (!text.trim()) throw new Error('Gemini no devolvió texto. Verifica la API Key y los permisos.');
+
+    // Extract JSON — find outermost { } regardless of markdown wrapping
+    const start = text.indexOf('{');
+    const end   = text.lastIndexOf('}');
+    if (start === -1 || end === -1) throw new Error('No se encontró JSON en la respuesta: ' + text.slice(0, 200));
+    const jsonStr = text.slice(start, end + 1);
+    const parsed = JSON.parse(jsonStr);
+
+    inv.proveedor = parsed.proveedor || '';
+    if (parsed.fecha && !document.getElementById('cFecha').value)
+      document.getElementById('cFecha').value = parsed.fecha;
+    updateProveedorSummary();
+
+    inv.productos = (parsed.productos || []).map(p => ({
+      nombre: p.nombre || '', cantidad: p.cantidad || 0,
+      unidad: p.unidad || 'L', precio: p.precio_unitario || 0,
+      total: p.total || (p.cantidad * p.precio_unitario) || 0
+    }));
+    inv.status = 'done';
+    inv.productos.forEach(p => addProdRow(p));
+
+  } catch(e) {
+    inv.status = 'error';
+    inv.error = e.message;
+    console.error('Gemini error:', e);
+  }
+  renderInvoiceList();
+  recalcTotal();
+}
+
+const PROMPT_FACTURA = `Analiza esta factura de insumos agrícolas (fertilizantes, herbicidas, insecticidas, fungicidas, etc.) y extrae todos los productos listados.
+Devuelve ÚNICAMENTE un JSON válido con este formato exacto, sin texto antes ni después:
+{
+  "proveedor": "nombre del proveedor si aparece, o null",
+  "fecha": "YYYY-MM-DD si aparece, o null",
+  "productos": [
+    {
+      "nombre": "nombre completo del producto tal como aparece",
+      "cantidad": 10.5,
+      "unidad": "L o kg o ton o pza o g o ml",
+      "precio_unitario": 150.00,
+      "total": 1500.00
+    }
+  ],
+  "total_factura": 0
+}`;
+
+/* ─── File handling ─────────────────────────────────── */
+function onDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('drag-over'); }
+function onDragLeave(e) { document.getElementById('uploadZone').classList.remove('drag-over'); }
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag-over');
+  handleFiles([...e.dataTransfer.files]);
+}
+function onFileSelect(e) { handleFiles([...e.target.files]); e.target.value = ''; }
+
+function handleFiles(files) {
+  files.forEach(file => {
+    const isPdf = file.type === 'application/pdf';
+    const isImg = file.type.startsWith('image/');
+    const isXml = file.type.includes('xml') || file.name.toLowerCase().endsWith('.xml');
+    if (!isPdf && !isImg && !isXml) return;
+
+    if (isXml) {
+      const inv = { id: uid(), name: file.name, mediaType: 'text/xml', b64: null, status: 'loading', productos: [], error: null, isXml: true };
+      invoices.push(inv);
+      renderInvoiceList();
+      const r = new FileReader();
+      r.onload = e => { parseCFDI(e.target.result, inv); };
+      r.readAsText(file, 'UTF-8');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      const b64full = e.target.result; // data:...;base64,...
+      const b64 = b64full.split(',')[1];
+      const inv = { id: uid(), name: file.name, mediaType: file.type, b64, status: 'pending', productos: [], error: null };
+      if (isImg) inv.thumb = b64full;
+      invoices.push(inv);
+      renderInvoiceList();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function parseCFDI(xmlText, inv) {
+  try {
+    const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
+    const ns  = 'http://www.sat.gob.mx/cfd/4';
+    const ns3 = 'http://www.sat.gob.mx/cfd/3';
+
+    const comp = doc.querySelector('Comprobante') ||
+                 doc.getElementsByTagNameNS(ns,  'Comprobante')[0] ||
+                 doc.getElementsByTagNameNS(ns3, 'Comprobante')[0];
+    if (!comp) throw new Error('No es un XML CFDI válido.');
+
+    // Emisor = proveedor
+    const emisor = comp.querySelector('Emisor') ||
+                   doc.getElementsByTagNameNS(ns,  'Emisor')[0] ||
+                   doc.getElementsByTagNameNS(ns3, 'Emisor')[0];
+    inv.proveedor = emisor?.getAttribute('Nombre') || emisor?.getAttribute('nombre') || '';
+
+    // Fecha
+    const fechaRaw = comp.getAttribute('Fecha') || comp.getAttribute('fecha') || '';
+    if (fechaRaw && !document.getElementById('cFecha').value)
+      document.getElementById('cFecha').value = fechaRaw.slice(0, 10);
+
+    // Conceptos = productos
+    const conceptos = [...doc.querySelectorAll('Concepto')];
+    inv.productos = conceptos.map(c => {
+      const cantidad = parseFloat(c.getAttribute('Cantidad') || c.getAttribute('cantidad') || 0);
+      const precio   = parseFloat(c.getAttribute('ValorUnitario') || c.getAttribute('valorUnitario') || 0);
+      const total    = parseFloat(c.getAttribute('Importe') || c.getAttribute('importe') || 0) || cantidad * precio;
+      const nombre   = c.getAttribute('Descripcion') || c.getAttribute('descripcion') || c.getAttribute('Concepto') || '';
+      const unidad   = c.getAttribute('ClaveUnidad') || c.getAttribute('claveUnidad') || c.getAttribute('Unidad') || 'pza';
+      return { nombre, cantidad, unidad, precio, total };
+    }).filter(p => p.nombre);
+
+    if (!inv.productos.length) throw new Error('No se encontraron conceptos en el XML.');
+
+    inv.status = 'done';
+    inv.productos.forEach(p => addProdRow(p));
+    updateProveedorSummary();
+  } catch(e) {
+    inv.status = 'error';
+    inv.error = e.message;
+  }
+  renderInvoiceList();
+  recalcTotal();
+}
+
+function renderInvoiceList() {
+  const list = document.getElementById('invoiceList');
+  if (!invoices.length) { list.innerHTML = ''; return; }
+  list.innerHTML = invoices.map(inv => {
+    const thumb = inv.thumb
+      ? `<img src="${inv.thumb}" style="width:36px;height:36px;border-radius:6px;object-fit:cover;">`
+      : `<div class="invoice-thumb"><i class="fas fa-file-${inv.isXml ? 'code' : 'pdf'}" style="font-size:18px;${inv.isXml ? 'color:#0ea5e9;' : ''}"></i></div>`;
+    let statusHtml = '';
+    if (inv.isXml && inv.status === 'loading')
+      statusHtml = `<span style="display:flex;align-items:center;gap:6px;font-size:12px;color:#0ea5e9;"><span class="ai-spinner" style="border-color:#0ea5e9;border-top-color:transparent;"></span>Leyendo XML…</span>`;
+    else if (inv.status === 'pending')
+      statusHtml = `<button class="btn btn-ai btn-sm" onclick="recognizeInvoice(invoices.find(i=>i.id==='${inv.id}'))"><i class="fas fa-magic"></i> Reconocer con IA</button>`;
+    else if (inv.status === 'loading')
+      statusHtml = `<span style="display:flex;align-items:center;gap:6px;font-size:12px;color:#6d28d9;"><span class="ai-spinner" style="border-color:#6d28d9;border-top-color:transparent;"></span>Analizando…</span>`;
+    else if (inv.status === 'done')
+      statusHtml = `<span class="badge badge-green"><i class="fas fa-check"></i> ${inv.productos.length} productos${inv.isXml ? ' · CFDI' : ''}</span>`;
+    else if (inv.status === 'error')
+      statusHtml = `<span class="badge badge-orange" title="${inv.error||''}" style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help;"><i class="fas fa-exclamation-circle"></i> ${(inv.error||'Error').slice(0,60)}${(inv.error||'').length>60?'…':''}</span>
+        ${inv.isXml ? '' : `<button class="btn btn-sm btn-secondary" onclick="recognizeInvoice(invoices.find(i=>i.id==='${inv.id}'))"><i class="fas fa-redo"></i> Reintentar</button>`}`;
+
+    const proveedorRow = `
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-top:1px solid var(--border-color);background:#fff;">
+        <i class="fas fa-store" style="font-size:11px;color:#94a3b8;flex-shrink:0;"></i>
+        <input type="text" value="${inv.proveedor||''}" placeholder="Proveedor de esta factura"
+          style="border:none;outline:none;font-size:12px;flex:1;background:transparent;color:var(--text-dark);"
+          oninput="invoices.find(i=>i.id==='${inv.id}').proveedor=this.value;updateProveedorSummary()">
+      </div>`;
+
+    return `<div class="invoice-item">
+      <div class="invoice-item-header">
+        ${thumb}
+        <span class="invoice-name">${inv.name}</span>
+        ${statusHtml}
+        <button class="btn btn-icon" onclick="removeInvoice('${inv.id}')" title="Quitar"><i class="fas fa-times"></i></button>
+      </div>
+      ${proveedorRow}
+    </div>`;
+  }).join('');
+}
+
+function updateProveedorSummary() {
+  const unique = [...new Set(invoices.map(i => i.proveedor).filter(Boolean))];
+  document.getElementById('cProveedor').value = unique.join(' / ');
+}
+
+function removeInvoice(id) {
+  invoices = invoices.filter(i => i.id !== id);
+  renderInvoiceList();
+  updateProveedorSummary();
+}
+
+/* ─── Product rows in compra modal ─────────────────── */
+function addProdRow(p) {
+  const container = document.getElementById('prodRows');
+  const id = uid();
+  const row = document.createElement('div');
+  row.className = 'prod-row';
+  row.dataset.rowId = id;
+  row.innerHTML = `
+    <input type="text"   placeholder="Nombre del producto" value="${p?.nombre||''}" onchange="recalcTotal()" class="prod-nombre">
+    <input type="number" placeholder="0" value="${p?.cantidad||''}" min="0" step="0.01" onchange="recalcRowTotal(this)" class="prod-qty">
+    <select class="prod-unit" onchange="recalcTotal()">
+      ${['L','mL','kg','g','ton','pza','costal','lt'].map(u=>`<option ${u===(p?.unidad||'L')?'selected':''}>${u}</option>`).join('')}
+    </select>
+    <input type="number" placeholder="$ 0.00" value="${p?.precio||''}" min="0" step="0.01" onchange="recalcRowTotal(this)" class="prod-price">
+    <input type="number" placeholder="$ 0.00" value="${p?.total||''}" min="0" step="0.01" onchange="recalcTotal()" class="prod-total" readonly style="background:#f9f9f9;">
+    <button class="btn btn-icon" onclick="this.closest('.prod-row').remove();recalcTotal()" title="Quitar"><i class="fas fa-times"></i></button>`;
+  container.appendChild(row);
+  recalcTotal();
+}
+
+function recalcRowTotal(input) {
+  const row = input.closest('.prod-row');
+  const qty   = parseFloat(row.querySelector('.prod-qty').value)   || 0;
+  const price = parseFloat(row.querySelector('.prod-price').value) || 0;
+  row.querySelector('.prod-total').value = (qty * price).toFixed(2);
+  recalcTotal();
+}
+
+function recalcTotal() {
+  let sum = 0;
+  document.querySelectorAll('#prodRows .prod-total').forEach(i => { sum += parseFloat(i.value)||0; });
+  document.getElementById('cTotal').textContent = fmtMXN(sum);
+}
+
+function getProdRows() {
+  return [...document.querySelectorAll('#prodRows .prod-row')].map(row => ({
+    nombre:   row.querySelector('.prod-nombre').value.trim(),
+    cantidad: parseFloat(row.querySelector('.prod-qty').value)   || 0,
+    unidad:   row.querySelector('.prod-unit').value,
+    precio:   parseFloat(row.querySelector('.prod-price').value) || 0,
+    total:    parseFloat(row.querySelector('.prod-total').value)  || 0,
+  })).filter(r => r.nombre);
+}
+
+/* ─── Compras ───────────────────────────────────────── */
+function openCompraModal(id) {
+  editingCompraId = id || null;
+  invoices = [];
+  document.getElementById('prodRows').innerHTML = '';
+  document.getElementById('invoiceList').innerHTML = '';
+  document.getElementById('cTotal').textContent = '$0';
+  document.getElementById('modalCompraTitle').textContent = id ? 'Editar Compra' : 'Nueva Compra';
+
+  // Populate receta select
+  const sel = document.getElementById('cReceta');
+  sel.innerHTML = '<option value="">— Sin receta —</option>' +
+    data.recetas.map(r => `<option value="${r.id}">${r.nombre}</option>`).join('');
+
+  if (id) {
+    const c = data.compras.find(x => x.id === id);
+    if (!c) return;
+    document.getElementById('cFecha').value    = c.fecha;
+    document.getElementById('cProveedor').value = c.proveedor;
+    document.getElementById('cNotas').value     = c.notas || '';
+    sel.value = c.recetaId || '';
+    c.items.forEach(p => addProdRow(p));
+    invoices = (c.facturas || []).map(f => ({ id: f.id, name: f.name, proveedor: f.proveedor||'', status: 'done', productos: [], b64: null, thumb: null }));
+    renderInvoiceList();
+  } else {
+    document.getElementById('cFecha').value     = new Date().toISOString().slice(0,10);
+    document.getElementById('cProveedor').value  = '';
+    document.getElementById('cNotas').value      = '';
+    sel.value = '';
+  }
+  document.getElementById('modalCompra').style.display = 'flex';
+}
+
+
+function deleteCompra(id) {
+  if (!confirm('¿Eliminar esta compra? Los productos que ya no tengan otras compras se quitarán del catálogo.')) return;
+  data.compras = data.compras.filter(c => c.id !== id);
+  // Remove catalog products that no longer appear in any remaining compra
+  const nombresActivos = new Set(
+    data.compras.flatMap(c => c.items || []).map(i => i.nombre.toLowerCase())
+  );
+  data.productos = data.productos.filter(p => nombresActivos.has(p.nombre.toLowerCase()));
+  save(); refreshAll();
+}
+
+function renderCardsCompras() {
+  const totalCompras = data.compras.length;
+  const totalInvertido = data.compras.reduce((s,c) => s + (c.total||0), 0);
+  const prods = new Set(data.compras.flatMap(c => c.items.map(i => i.nombre.toLowerCase())));
+  document.getElementById('cardsCompras').innerHTML = `
+    <div class="sum-card"><div class="sum-card-label">Total Compras</div><div class="sum-card-value">${totalCompras}</div><div class="sum-card-sub">registros</div></div>
+    <div class="sum-card"><div class="sum-card-label">Total Invertido</div><div class="sum-card-value">${fmtMXN(totalInvertido)}</div><div class="sum-card-sub">en insumos</div></div>
+    <div class="sum-card"><div class="sum-card-label">Productos Distintos</div><div class="sum-card-value">${prods.size}</div><div class="sum-card-sub">en catálogo</div></div>`;
+}
+
+function renderCompras() {
+  const tbody = document.getElementById('tbodyCompras');
+  if (!data.compras.length) {
+    tbody.innerHTML = `<tr><td colspan="7" class="td-empty"><i class="fas fa-file-invoice"></i>Sin compras registradas — haz clic en "Nueva Compra" para comenzar</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.compras.map(c => {
+    const receta = data.recetas.find(r => r.id === c.recetaId);
+    return `<tr>
+      <td>${fmtDate(c.fecha)}</td>
+      <td><strong>${c.proveedor}</strong>${c.notas?`<br><span style="font-size:11px;color:var(--text-light);">${c.notas}</span>`:''}</td>
+      <td><span class="badge badge-gray"><i class="fas fa-file"></i> ${c.facturas?.length||0}</span></td>
+      <td>${c.items.length} productos</td>
+      <td><strong style="color:var(--dark-green);">${fmtMXN(c.total)}</strong></td>
+      <td>${receta?`<span class="badge badge-green">${receta.nombre}</span>`:'<span style="color:#ccc;">—</span>'}</td>
+      <td>
+        <div style="display:flex;gap:4px;">
+          <button class="btn btn-icon" onclick="openCompraModal('${c.id}')" title="Editar"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-icon btn-danger" onclick="deleteCompra('${c.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+/* ─── Catálogo ──────────────────────────────────────── */
+function getExistencia(productoId, nombre) {
+  // Entradas = suma compras
+  const entradas = data.compras.flatMap(c => c.items)
+    .filter(i => i.nombre.toLowerCase() === nombre.toLowerCase())
+    .reduce((s,i) => s + (i.cantidad||0), 0);
+  // Salidas = suma aplicaciones
+  const salidas = data.aplicaciones.flatMap(a => a.items||[])
+    .filter(i => i.nombre?.toLowerCase() === nombre.toLowerCase())
+    .reduce((s,i) => s + (i.cantidad||0), 0);
+  return { entradas, salidas, existencia: entradas - salidas };
+}
+
+function openProductoModal(id) {
+  // Quick inline prompt for now
+  const nombre = prompt('Nombre del producto:');
+  if (!nombre) return;
+  const tipo   = prompt('Tipo (Fertilizante / Herbicida / Insecticida / Fungicida / Otro):', 'Otro');
+  const unidad = prompt('Unidad (L / kg / g / pza…):', 'L');
+  data.productos.push({ id: uid(), nombre: nombre.trim(), tipo: tipo||'Otro', unidad: unidad||'L' });
+  save(); renderCatalogo();
+}
+
+function renderCatalogo() {
+  const tbody = document.getElementById('tbodyCatalogo');
+  const filtro = document.getElementById('filtroTipo')?.value || '';
+  const prods = filtro ? data.productos.filter(p => p.tipo === filtro) : data.productos;
+
+  if (!prods.length) {
+    tbody.innerHTML = `<tr><td colspan="7" class="td-empty"><i class="fas fa-boxes"></i>Sin productos. Se agregan automáticamente desde las compras.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = prods.map(p => {
+    const { entradas, salidas, existencia } = getExistencia(p.id, p.nombre);
+    const pct = entradas ? Math.max(0, existencia / entradas) : 0;
+    const barClass = pct < 0.15 ? 'empty' : pct < 0.3 ? 'low' : '';
+    const TIPO_BADGE = { Fertilizante:'badge-green', Herbicida:'badge-orange', Insecticida:'badge-blue', Fungicida:'badge-purple', Otro:'badge-gray' };
+    return `<tr>
+      <td><strong>${p.nombre}</strong></td>
+      <td><span class="badge ${TIPO_BADGE[p.tipo]||'badge-gray'}">${p.tipo}</span></td>
+      <td>${p.unidad}</td>
+      <td style="color:var(--primary-green);">${entradas.toLocaleString('es-MX',{maximumFractionDigits:2})} ${p.unidad}</td>
+      <td style="color:var(--danger);">${salidas.toLocaleString('es-MX',{maximumFractionDigits:2})} ${p.unidad}</td>
+      <td>
+        <strong>${existencia.toLocaleString('es-MX',{maximumFractionDigits:2})} ${p.unidad}</strong>
+        <div class="stock-bar"><div class="stock-bar-fill ${barClass}" style="width:${(pct*100).toFixed(0)}%"></div></div>
+      </td>
+      <td>
+        <button class="btn btn-icon btn-danger" onclick="deleteProducto('${p.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function deleteProducto(id) {
+  if (!confirm('¿Eliminar este producto del catálogo?')) return;
+  data.productos = data.productos.filter(p => p.id !== id);
+  save(); renderCatalogo();
+}
+
+/* ─── Recetas ───────────────────────────────────────── */
+function openRecetaModal(id) {
+  editingRecetaId = id;
+  rFotoData = null;
+  document.getElementById('rNombre').value = '';
+  document.getElementById('rCultivo').value = '';
+  document.getElementById('rFecha').value = new Date().toISOString().slice(0,10);
+  document.getElementById('rNotas').value = '';
+  document.getElementById('rFotoPreview').style.display = 'none';
+  document.getElementById('rFotoPreview').src = '';
+  document.getElementById('modalRecetaTitle').textContent = id ? 'Editar Receta' : 'Nueva Receta';
+
+  if (id) {
+    const r = data.recetas.find(x => x.id === id);
+    if (!r) return;
+    document.getElementById('rNombre').value  = r.nombre;
+    document.getElementById('rCultivo').value = r.cultivo || '';
+    document.getElementById('rFecha').value   = r.fecha || '';
+    document.getElementById('rNotas').value   = r.notas || '';
+    if (r.foto) {
+      rFotoData = r.foto;
+      const prev = document.getElementById('rFotoPreview');
+      prev.src = r.foto; prev.style.display = 'block';
+    }
+  }
+  document.getElementById('modalReceta').style.display = 'flex';
+}
+
+function previewRecetaFoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    rFotoData = ev.target.result;
+    const prev = document.getElementById('rFotoPreview');
+    prev.src = rFotoData; prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveReceta() {
+  const nombre = document.getElementById('rNombre').value.trim();
+  if (!nombre) { alert('El nombre de la receta es requerido.'); return; }
+  const receta = {
+    id: editingRecetaId || uid(),
+    nombre,
+    cultivo: document.getElementById('rCultivo').value.trim(),
+    fecha:   document.getElementById('rFecha').value,
+    notas:   document.getElementById('rNotas').value.trim(),
+    foto:    rFotoData
+  };
+  if (editingRecetaId) {
+    data.recetas = data.recetas.map(r => r.id === editingRecetaId ? receta : r);
+  } else {
+    data.recetas.unshift(receta);
+  }
+  save(); renderRecetas(); closeModal('modalReceta');
+}
+
+function verReceta(id) {
+  const r = data.recetas.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('vrNombre').textContent = r.nombre;
+  document.getElementById('vrBody').innerHTML = `
+    ${r.foto ? `<img src="${r.foto}" style="width:100%;border-radius:8px;margin-bottom:16px;max-height:320px;object-fit:contain;border:1px solid var(--border-color);">` : '<div style="text-align:center;padding:30px;color:#ccc;font-size:40px;"><i class="fas fa-image"></i></div>'}
+    ${r.cultivo ? `<p style="font-size:13px;color:var(--text-light);margin-bottom:6px;"><i class="fas fa-seedling" style="color:var(--accent);"></i> <strong>${r.cultivo}</strong></p>` : ''}
+    ${r.fecha   ? `<p style="font-size:13px;color:var(--text-light);margin-bottom:6px;"><i class="fas fa-calendar"></i> ${fmtDate(r.fecha)}</p>` : ''}
+    ${r.notas   ? `<p style="font-size:13px;color:var(--text-dark);margin-top:10px;">${r.notas}</p>` : ''}`;
+  document.getElementById('vrFooter').innerHTML = `
+    <button class="btn btn-secondary" onclick="closeModal('modalVerReceta')">Cerrar</button>
+    <button class="btn btn-primary" onclick="closeModal('modalVerReceta');openRecetaModal('${r.id}')"><i class="fas fa-edit"></i> Editar</button>`;
+  document.getElementById('modalVerReceta').style.display = 'flex';
+}
+
+function deleteReceta(id) {
+  if (!confirm('¿Eliminar esta receta?')) return;
+  data.recetas = data.recetas.filter(r => r.id !== id);
+  save(); renderRecetas();
+}
+
+function renderRecetas() {
+  const grid = document.getElementById('recipeGrid');
+  const cards = data.recetas.map(r => `
+    <div class="recipe-card" onclick="verReceta('${r.id}')">
+      <div class="recipe-img">
+        ${r.foto ? `<img src="${r.foto}" alt="${r.nombre}">` : '<i class="fas fa-prescription-bottle-alt"></i>'}
+      </div>
+      <div class="recipe-info">
+        <div class="recipe-name">${r.nombre}</div>
+        <div class="recipe-cultivo">${r.cultivo||'Sin cultivo asignado'} ${r.fecha?'· '+fmtDate(r.fecha):''}</div>
+        <div style="display:flex;gap:6px;margin-top:8px;" onclick="event.stopPropagation()">
+          <button class="btn btn-icon btn-sm" onclick="openRecetaModal('${r.id}')" title="Editar"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-icon btn-sm btn-danger" onclick="deleteReceta('${r.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </div>`).join('');
+  grid.innerHTML = cards + `
+    <div class="recipe-card recipe-add" onclick="openRecetaModal(null)">
+      <i class="fas fa-plus" style="font-size:28px;"></i>
+      <span style="font-size:13px;font-weight:600;">Nueva Receta</span>
+    </div>`;
+}
+
+/* ─── Aplicaciones ──────────────────────────────────── */
+function openAplicacionModal(id) {
+  editingAplicId = id;
+  remisionData = null;
+  document.getElementById('aplProdRows').innerHTML = '';
+  document.getElementById('remisionPreview').innerHTML = '';
+  document.getElementById('aFecha').value    = new Date().toISOString().slice(0,10);
+  document.getElementById('aCultivo').value  = '';
+  document.getElementById('aMetodo').value   = 'Manual';
+  document.getElementById('modalAplTitle').textContent = id ? 'Editar Aplicación' : 'Nueva Aplicación';
+  toggleRemision();
+
+  const sel = document.getElementById('aReceta');
+  sel.innerHTML = '<option value="">— Sin receta —</option>' +
+    data.recetas.map(r => `<option value="${r.id}">${r.nombre}</option>`).join('');
+
+  if (id) {
+    const a = data.aplicaciones.find(x => x.id === id);
+    if (!a) return;
+    document.getElementById('aFecha').value   = a.fecha;
+    document.getElementById('aCultivo').value = a.cultivo;
+    document.getElementById('aMetodo').value  = a.metodo;
+    sel.value = a.recetaId || '';
+    remisionData = a.remision || null;
+    if (remisionData) document.getElementById('remisionPreview').innerHTML = `<i class="fas fa-check-circle" style="color:var(--accent);"></i> Remisión cargada`;
+    toggleRemision();
+    (a.items||[]).forEach(p => addAplProdRow(p));
+  }
+  document.getElementById('modalAplicacion').style.display = 'flex';
+}
+
+function toggleRemision() {
+  const metodo = document.getElementById('aMetodo').value;
+  document.getElementById('remisionField').style.display = metodo === 'Avioneta' ? 'block' : 'none';
+}
+
+function previewRemision(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    remisionData = ev.target.result;
+    document.getElementById('remisionPreview').innerHTML =
+      `<i class="fas fa-check-circle" style="color:var(--accent);"></i> ${file.name} cargado`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function getDisponible(nombre, excludeAplicId) {
+  const norm = s => s.toLowerCase().trim();
+  const entradas = data.compras.flatMap(c => c.items||[])
+    .filter(i => norm(i.nombre) === norm(nombre))
+    .reduce((s,i) => s + (i.cantidad||0), 0);
+  const salidas = data.aplicaciones
+    .filter(a => a.id !== excludeAplicId)
+    .flatMap(a => a.items||[])
+    .filter(i => norm(i.nombre||'') === norm(nombre))
+    .reduce((s,i) => s + (i.cantidad||0), 0);
+  return Math.max(0, entradas - salidas);
+}
+
+function getCatalogOptions(selectedNombre) {
+  const opts = data.productos.map(prod => {
+    const disp = getDisponible(prod.nombre, editingAplicId);
+    const sel  = prod.nombre === selectedNombre ? 'selected' : '';
+    const agotado = disp <= 0 ? ' (AGOTADO)' : '';
+    return `<option value="${prod.nombre}" data-unidad="${prod.unidad||'L'}" data-disp="${disp}" ${sel}>${prod.nombre} · ${disp.toFixed(1)} ${prod.unidad||''} disponible${agotado}</option>`;
+  });
+  return `<option value="">— Seleccionar del catálogo —</option>` + opts.join('');
+}
+
+function updateQtyIndicator(row, disponible, unidad) {
+  let hint = row.querySelector('.qty-hint');
+  if (!hint) {
+    hint = document.createElement('span');
+    hint.className = 'qty-hint';
+    hint.style.cssText = 'font-size:11px;margin-top:2px;display:block;grid-column:2;';
+    row.appendChild(hint);
+  }
+  const qtyInput = row.querySelector('input[type="number"]');
+  const qty = parseFloat(qtyInput.value) || 0;
+  if (qty > disponible && disponible >= 0) {
+    hint.textContent = `⚠ Máx: ${disponible.toFixed(1)} ${unidad}`;
+    hint.style.color = '#ef4444';
+    qtyInput.style.borderColor = '#ef4444';
+  } else {
+    hint.textContent = disponible >= 0 ? `Disp: ${disponible.toFixed(1)} ${unidad}` : '';
+    hint.style.color = '#10b981';
+    qtyInput.style.borderColor = '';
+  }
+}
+
+function addAplProdRow(p) {
+  const container = document.getElementById('aplProdRows');
+  const row = document.createElement('div');
+  row.className = 'prod-row';
+  row.style.gridTemplateColumns = '1fr 90px 80px 32px';
+  row.style.flexWrap = 'wrap';
+
+  const prodSelect = document.createElement('select');
+  prodSelect.innerHTML = getCatalogOptions(p?.nombre || '');
+
+  const qtyInput = document.createElement('input');
+  qtyInput.type = 'number'; qtyInput.placeholder = '0';
+  qtyInput.value = p?.cantidad || ''; qtyInput.min = '0'; qtyInput.step = '0.01';
+
+  const unitSel = document.createElement('select');
+  unitSel.className = 'apl-unit';
+  const selUnit = p?.unidad || prodSelect.options[prodSelect.selectedIndex]?.dataset?.unidad || 'L';
+  unitSel.innerHTML = ['L','mL','kg','g','ton','pza','costal','lt'].map(u => `<option ${u===selUnit?'selected':''}>${u}</option>`).join('');
+
+  const syncFromSelect = () => {
+    const opt = prodSelect.options[prodSelect.selectedIndex];
+    const unidad = opt?.dataset?.unidad || 'L';
+    const disp   = parseFloat(opt?.dataset?.disp ?? -1);
+    [...unitSel.options].forEach(o => { o.selected = o.value === unidad; });
+    qtyInput.max = disp >= 0 ? disp : '';
+    updateQtyIndicator(row, disp, unidad);
+  };
+
+  prodSelect.addEventListener('change', syncFromSelect);
+  qtyInput.addEventListener('input', () => {
+    const opt  = prodSelect.options[prodSelect.selectedIndex];
+    const disp = parseFloat(opt?.dataset?.disp ?? -1);
+    if (disp >= 0 && parseFloat(qtyInput.value) > disp) {
+      qtyInput.value = disp.toFixed(2);
+    }
+    updateQtyIndicator(row, disp, unitSel.value);
+  });
+
+  const delBtn = document.createElement('button');
+  delBtn.className = 'btn btn-icon'; delBtn.title = 'Quitar';
+  delBtn.innerHTML = '<i class="fas fa-times"></i>';
+  delBtn.onclick = () => row.remove();
+
+  row.appendChild(prodSelect);
+  row.appendChild(qtyInput);
+  row.appendChild(unitSel);
+  row.appendChild(delBtn);
+  container.appendChild(row);
+
+  // Init indicator if editing existing row
+  if (p?.nombre) syncFromSelect();
+}
+
+function getAplProdRows() {
+  return [...document.querySelectorAll('#aplProdRows .prod-row')].map(row => {
+    const prodSel = row.querySelector('select:not(.apl-unit)');
+    const qty     = row.querySelector('input[type="number"]');
+    const unitSel = row.querySelector('.apl-unit');
+    return { nombre: prodSel?.value.trim()||'', cantidad: parseFloat(qty?.value)||0, unidad: unitSel?.value||'L' };
+  }).filter(r => r.nombre);
+}
+
+function saveAplicacion() {
+  const fecha   = document.getElementById('aFecha').value;
+  const cultivo = document.getElementById('aCultivo').value.trim();
+  const metodo  = document.getElementById('aMetodo').value;
+  if (!fecha || !cultivo) { alert('Fecha y campo/cultivo son requeridos.'); return; }
+  if (metodo === 'Avioneta' && !remisionData) { alert('Para avioneta/drone debes subir la remisión de vuelo.'); return; }
+
+  const items = getAplProdRows();
+
+  // Validate stock — no item can exceed available inventory
+  const errores = [];
+  items.forEach(item => {
+    const disp = getDisponible(item.nombre, editingAplicId);
+    if (item.cantidad > disp) {
+      errores.push(`• ${item.nombre}: solicitado ${item.cantidad.toFixed(1)}, disponible ${disp.toFixed(1)}`);
+    }
+  });
+  if (errores.length) {
+    alert('No hay suficiente inventario para los siguientes productos:\n\n' + errores.join('\n'));
+    return;
+  }
+  const apl = {
+    id: editingAplicId || uid(),
+    fecha, cultivo, metodo,
+    recetaId: document.getElementById('aReceta').value,
+    remision: remisionData,
+    items
+  };
+  if (editingAplicId) {
+    data.aplicaciones = data.aplicaciones.map(a => a.id === editingAplicId ? apl : a);
+  } else {
+    data.aplicaciones.unshift(apl);
+  }
+  save(); refreshAll(); closeModal('modalAplicacion');
+}
+
+function deleteAplicacion(id) {
+  if (!confirm('¿Eliminar esta aplicación?')) return;
+  data.aplicaciones = data.aplicaciones.filter(a => a.id !== id);
+  save(); refreshAll();
+}
+
+function renderAplicaciones() {
+  const tbody = document.getElementById('tbodyAplicaciones');
+  if (!data.aplicaciones.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="td-empty"><i class="fas fa-spray-can"></i>Sin aplicaciones registradas</td></tr>`;
+    return;
+  }
+  const METODO_ICON = { Manual:'fa-hands', Aspersión:'fa-shower', Avioneta:'fa-plane', Fertirrigación:'fa-tint' };
+  tbody.innerHTML = data.aplicaciones.map(a => {
+    const receta = data.recetas.find(r => r.id === a.recetaId);
+    const icon = METODO_ICON[a.metodo] || 'fa-spray-can';
+    const remBtn = a.remision ? `<a href="${a.remision}" download="remision.pdf" class="btn btn-icon btn-sm" title="Descargar remisión"><i class="fas fa-file-download"></i></a>` : '';
+    return `<tr>
+      <td>${fmtDate(a.fecha)}</td>
+      <td><strong>${a.cultivo}</strong></td>
+      <td>${receta?`<span class="badge badge-green">${receta.nombre}</span>`:'—'}</td>
+      <td><span class="method-badge"><i class="fas ${icon}" style="color:var(--accent);"></i> ${a.metodo}</span> ${remBtn}</td>
+      <td style="font-size:12px;color:var(--text-light);">${(a.items||[]).map(i=>`${i.cantidad} ${i.unidad} ${i.nombre}`).join(', ')||'—'}</td>
+      <td>
+        <div style="display:flex;gap:4px;">
+          <button class="btn btn-icon" onclick="openAplicacionModal('${a.id}')" title="Editar"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-icon btn-danger" onclick="deleteAplicacion('${a.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+/* ─── Modals ────────────────────────────────────────── */
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.style.display = 'none'; });
+});
+
+load();
+</script>
+<!-- ══════════════════ MODAL: CONFLICTOS ══════════════════ -->
+<div class="modal-overlay" id="modalConflictos" style="display:none;">
+  <div class="modal-card sm">
+    <div class="modal-header">
+      <h3><i class="fas fa-exclamation-triangle" style="color:#f59e0b;margin-right:8px;"></i>Productos similares detectados</h3>
+      <button class="btn-close" onclick="closeModal('modalConflictos')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;">
+        Estos productos coinciden con otros ya registrados. Unificarlos permite que cuenten juntos en el inventario y el historial de precios sea continuo.
+      </p>
+      <div id="conflictList"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalConflictos');finalizeCompra(_pendingCompra,_pendingItems)">Ignorar y guardar</button>
+      <button class="btn btn-primary" onclick="resolveConflicts()"><i class="fas fa-check"></i> Aplicar y guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="user-widget.js"></script>
+</body>
+</html>

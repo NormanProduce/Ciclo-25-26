@@ -6,11 +6,6 @@
 <title>NORMAN / Iniciar Sesión</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-<script src="firebase-config.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1138,8 +1133,17 @@
     if (btn) btn.innerHTML = dark ? SUN_SVG : MOON_SVG;
   }
 
-  const auth = firebase.auth();
-  const db   = firebase.firestore();
+  // ── Usuarios del sistema ──────────────────────────────
+  const USERS_KEY = 'np_users';
+  const defaultUsers = [
+    { id:'u1', nombre:'Carlos Robles', email:'carlos.robles@mail.com', username:'admin', password:'Norman01', rol:'Administrador' }
+  ];
+  function getUsers() {
+    try { return JSON.parse(localStorage.getItem(USERS_KEY)) || defaultUsers; } catch { return defaultUsers; }
+  }
+  function findUser(username, password) {
+    return getUsers().find(u => u.username === username && u.password === password) || null;
+  }
 
   // Widget de usuario
   function showUserWidget(user) {
@@ -1167,28 +1171,20 @@
   }
 
   function cerrarSesion() {
-    auth.signOut().then(() => location.reload());
+    sessionStorage.removeItem('np_logged');
+    sessionStorage.removeItem('np_current_user');
+    location.reload();
   }
 
-  // Si ya hay sesión Firebase activa, saltar directo al selector de ciclo
-  auth.onAuthStateChanged(async function (fbUser) {
-    if (!fbUser) return;
-    let nombre = fbUser.email;
-    try {
-      const doc = await db.collection('usuarios').doc(fbUser.uid).get();
-      if (doc.exists && doc.data().activo !== false) {
-        nombre = doc.data().nombre || fbUser.email;
-      } else {
-        // Perfil inexistente o inactivo — cerrar sesión
-        await auth.signOut();
-        return;
-      }
-    } catch (e) { /* error de red, dejar pasar */ }
-    showUserWidget({ nombre, email: fbUser.email });
+  // Si ya hay sesión activa, saltar directo al selector de ciclo
+  if (sessionStorage.getItem('np_logged') === '1') {
+    const stored = sessionStorage.getItem('np_current_user');
+    const user = stored ? JSON.parse(stored) : defaultUsers[0];
+    showUserWidget(user);
     document.getElementById('loginForm').style.display = 'none';
     document.querySelector('.form-header').style.display = 'none';
     document.getElementById('cycleSelector').style.display = 'block';
-  });
+  }
 
   // Toggle password visibility
   const togglePw = document.getElementById('togglePw');
@@ -1234,45 +1230,33 @@
 
     if (!valid) return;
 
+    const matchedUser = findUser(emailValue, pass.value);
+    if (!matchedUser) {
+      showErrorDialog();
+      return;
+    }
+
+    // Loading state
     btn.classList.add('loading');
     btn.disabled = true;
 
-    auth.signInWithEmailAndPassword(emailValue, pass.value)
-      .then(async (cred) => {
-        const fbUser = cred.user;
-        let nombre = fbUser.email;
-        try {
-          const doc = await db.collection('usuarios').doc(fbUser.uid).get();
-          if (doc.exists && doc.data().activo !== false) {
-            nombre = doc.data().nombre || fbUser.email;
-          } else {
-            // Cuenta sin perfil aprobado — denegar acceso
-            await auth.signOut();
-            btn.classList.remove('loading');
-            btn.disabled = false;
-            showErrorDialog();
-            return;
-          }
-        } catch (e) { /* error de red */ }
-
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        btn.style.background = '#4a7a20';
-        btn.querySelector('.btn-text').textContent = '✓ Bienvenido';
-        showUserWidget({ nombre, email: fbUser.email });
-        document.getElementById('loginForm').style.display = 'none';
-        document.querySelector('.form-header').style.display = 'none';
-        document.getElementById('cycleSelector').style.display = 'block';
-        setTimeout(() => {
-          btn.style.background = '';
-          btn.querySelector('.btn-text').textContent = 'Entrar';
-        }, 2500);
-      })
-      .catch(() => {
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        showErrorDialog();
-      });
+    setTimeout(() => {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      btn.style.background = '#4a7a20';
+      btn.querySelector('.btn-text').textContent = '✓ Bienvenido';
+      // Guardar sesión y mostrar selector de ciclo
+      sessionStorage.setItem('np_logged', '1');
+      sessionStorage.setItem('np_current_user', JSON.stringify(matchedUser));
+      showUserWidget(matchedUser);
+      document.getElementById('loginForm').style.display = 'none';
+      document.querySelector('.form-header').style.display = 'none';
+      document.getElementById('cycleSelector').style.display = 'block';
+      setTimeout(() => {
+        btn.style.background = '';
+        btn.querySelector('.btn-text').textContent = 'Entrar';
+      }, 2500);
+    }, 1400);
   });
 
   // Clear errors on input
@@ -1281,22 +1265,6 @@
   });
   document.getElementById('password').addEventListener('input', () => {
     document.getElementById('field-password').classList.remove('has-error');
-  });
-
-  // Olvidé mi contraseña — envía correo de restablecimiento via Firebase
-  document.querySelector('.forgot-link').addEventListener('click', async (e) => {
-    e.preventDefault();
-    const emailVal = document.getElementById('email').value.trim();
-    if (!emailVal || !emailVal.includes('@')) {
-      alert('Ingresa tu correo electrónico en el campo de arriba primero.');
-      return;
-    }
-    try {
-      await auth.sendPasswordResetEmail(emailVal);
-      alert(`Se envió un correo de restablecimiento a ${emailVal}.\nRevisa tu bandeja de entrada (y carpeta de spam).`);
-    } catch (err) {
-      alert('No se pudo enviar el correo. Verifica que el correo esté registrado.');
-    }
   });
 
   // Error dialog

@@ -4,7 +4,7 @@
 //  https://console.firebase.google.com → Tu proyecto → Configuración → General
 // ════════════════════════════════════════════════════════════
 const firebaseConfig = {
-  apiKey:            "AIzaSyD7KHc9vHcsQXxvAgTKDdFzV3L_9lW_nzc",
+  apiKey:            "AIzaSyDf4YMEswKniupB7Wk36Dns1tEpILbmOuE",
   authDomain:        "norman-web-741f7.firebaseapp.com",
   projectId:         "norman-web-741f7",
   storageBucket:     "norman-web-741f7.firebasestorage.app",
